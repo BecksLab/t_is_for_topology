@@ -1,2 +1,5 @@
 [deps]
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 Mangal = "b8b640a6-63d9-51e6-b784-5033db27bef2"
+SpeciesInteractionNetworks = "49e116ef-912f-4766-9e56-896a49944adc"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
