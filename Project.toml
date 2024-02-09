@@ -1,4 +1,5 @@
 [deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 Mangal = "b8b640a6-63d9-51e6-b784-5033db27bef2"
 SpeciesInteractionNetworks = "49e116ef-912f-4766-9e56-896a49944adc"
