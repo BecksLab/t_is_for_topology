@@ -5,8 +5,9 @@ Return matrix of randomly assembled interactions according to
 the cascade model for a specifiec number of species and 
 connectance.
 
-Note this function has been ported from the EcologigalNetworks.jl
-source code and has been modified for the purpose of this project.
+Note this function has been ported from the EcologicalNetworks.jl
+source code and has been (minimally) modified for the purpose of 
+this project.
 
 
 #### References
