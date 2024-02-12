@@ -33,6 +33,12 @@ end
     adbmmodel
 
 function to generate netwrok using ADBM, Petchy and friends 2008
+
+#### References
+
+Petchey, Owen L., Andrew P. Beckerman, Jens O. Riede, and Philip H. Warren.
+2008. “Size, Foraging, and Food Web Structure.” Proceedings of the National
+Academy of Sciences 105 (11): 4191–96. https://doi.org/10.1073/pnas.0710672105.
 """
 function adbmmodel(
     species_richness::Int64,
