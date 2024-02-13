@@ -1,7 +1,7 @@
 """
 cascademodel(species::Int64, connectance::Float64)
 
-Return matrix of randomly assembled interactions according to
+Return a network of randomly assembled interactions according to
 the cascade model for a specifiec number of species and 
 connectance.
 
