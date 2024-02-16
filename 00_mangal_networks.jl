@@ -1,3 +1,5 @@
+using CSV
+using DataFrames
 using Mangal
 using SpeciesInteractionNetworks
 
@@ -7,18 +9,18 @@ mangal_networks = Mangal.networks("type" => "herbivory", "count" => network_coun
 
 # make a nice 'dataframe' to store network data
 mutable struct MangalNetworks
-    id::Vector{Int8}
-    richness::Vector{Int8}
-    links::Vector{Int8}
+    id::Vector{Int64}
+    richness::Vector{Int64}
+    links::Vector{Int64}
     connectance::Vector{Float64}
     # we can add some 'summary stats' here as well
 end
 
 function MangalNetworks(C::Int64)
     return MangalNetworks(
-        zeros(Int8, C),
-        zeros(Int8, C),
-        zeros(Int8, C),
+        zeros(Int64, C),
+        zeros(Int64, C),
+        zeros(Int64, C),
         zeros(Float64, C),
     )
 end
@@ -33,3 +35,12 @@ for i in eachindex(mangal_networks)
     mangal_topology.links[i] = links(N)
     mangal_topology.connectance[i] = connectance(N)
 end
+
+df = DataFrame(
+    id = mangal_topology.id,
+    richness = mangal_topology.richness,
+    links = mangal_topology.links,
+    connectance = mangal_topology.connectance
+)
+
+CSV.write("data/mangal_summary.csv", df)
