@@ -13,17 +13,23 @@ mangal_topology = DataFrame(
     richness = zeros(Int64, network_count),
     links = zeros(Int64, network_count),
     connectance = zeros(Float64, network_count),
-    complexity = zeros(Float64, network_count)
+    complexity = zeros(Float64, network_count),
+    distance = zeros(Float64, network_count)
 ); 
 
 for i in eachindex(mangal_networks)
     N = simplify(mangalnetwork(mangal_networks[i].id))
+
+    # specificity
+    spe = specificity(N)
+    ind_max = findmax(collect(values(spe)))[2]
 
     mangal_topology.id[i] = mangal_networks[i].id
     mangal_topology.richness[i] = richness(N)
     mangal_topology.links[i] = links(N)
     mangal_topology.connectance[i] = connectance(N)
     mangal_topology.complexity[i] = complexity(N)
+    mangal_topology.distance[i] = distancetobase(N, collect(keys(spe))[ind_max])
 end
 
 CSV.write("data/mangal_summary.csv", mangal_topology)
