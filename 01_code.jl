@@ -33,16 +33,18 @@ topology  = DataFrame(
     distance_mod = Float64[]
 );
 
-for (j, val) in enumerate(model_names)
-    if val == "random"
-        N = randommodel(mangal_topology.richness[i], mangal_topology.links[i])
-    elseif val == "niche"
-        N = structuralmodel(NicheModel, mangal_topology.richness[i], mangal_topology.connectance[i])
-    else val == "cascade"
-        N = cascademodel(mangal_topology.richness[i], mangal_topology.connectance[i])
-    end
+
     for i in 1:(nrow(mangal_topology))
         
+        for (j, val) in enumerate(model_names)
+            if val == "random"
+                N = randommodel(mangal_topology.richness[i], mangal_topology.links[i])
+            elseif val == "niche"
+                N = structuralmodel(NicheModel, mangal_topology.richness[i], mangal_topology.connectance[i])
+            else val == "cascade"
+                N = cascademodel(mangal_topology.richness[i], mangal_topology.connectance[i])
+            end
+            
         # specificity
         spe = specificity(N)
         ind_maxspe = findmax(collect(values(spe)))[2]
