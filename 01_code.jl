@@ -1,6 +1,7 @@
 using CSV
 using DataFrames
 using Distributions
+using Graphs
 #using EcologicalNetworks
 using Mangal
 using Random
@@ -9,14 +10,14 @@ using SpeciesInteractionNetworks
 # Load the functions we need from the lib folder
 include("lib/adbm.jl")
 include("lib/cascade.jl")
+include("lib/random.jl")
 #include("lib/nestedhierarchy.jl")
 
-# create new columns for models
-topology = CSV.read("data/mangal_summary.csv", DataFrame)
-insertcols!(topology, 5, :niche_complexity => zeros(Float64, nrow(topology)))
-insertcols!(topology, 6, :cascade_complexity => zeros(Float64, nrow(topology)))
-insertcols!(topology, 7, :niche_distance => zeros(Float64, nrow(topology)))
-insertcols!(topology, 8, :cascade_distance => zeros(Float64, nrow(topology)))
+# import mangal networks
+mangal_topology = CSV.read("data/mangal_summary.csv", DataFrame)
+
+# creat df for the outputs to be stored (long format)
+topology = 
 
 # calcualte complexity (for now) for relevant models
 for i in 1:nrow(topology)
