@@ -16,28 +16,50 @@ include("lib/random.jl")
 # import mangal networks
 mangal_topology = CSV.read("data/mangal_summary.csv", DataFrame)
 
-# creat df for the outputs to be stored (long format)
-topology = 
+model_names = ["random", "niche", "cascade"]
 
-# calcualte complexity (for now) for relevant models
-for i in 1:nrow(topology)
+# create df for the outputs to be stored (long format)
+
+topology  = DataFrame(
+    id = Int64[],
+    richness = Int64[],
+    links = Int64[],
+    connectance_real = Float64[],
+    complexity_real = Float64[],
+    distance_real = Float64[],
+    model = String[],
+    connectance_mod = Float64[],
+    complexity_mod = Float64[],
+    distance_mod = Float64[]
+);
+
+for (j, val) in enumerate(model_names)
+    if val == "random"
+        N = randommodel(mangal_topology.richness[i], mangal_topology.links[i])
+    elseif val == "niche"
+        N = structuralmodel(NicheModel, mangal_topology.richness[i], mangal_topology.connectance[i])
+    else val == "cascade"
+        N = cascademodel(mangal_topology.richness[i], mangal_topology.connectance[i])
+    end
+    for i in 1:(nrow(mangal_topology))
+        
+        # specificity
+        spe = specificity(N)
+        ind_maxspe = findmax(collect(values(spe)))[2]
     
-    # create networks
-    N_niche = structuralmodel(NicheModel, topology.richness[i], topology.connectance[i])
-    N_cascade = cascademodel(topology.richness[i], topology.connectance[i])
-
-    # specificity
-    spe_niche = specificity(N_niche)
-    ind_maxspe_niche = findmax(collect(values(spe_niche)))[2]
-    spe_cascade = specificity(N_cascade)
-    ind_maxspe_cascade = findmax(collect(values(spe_cascade)))[2]
-
-    topology.niche_complexity[i] = complexity(N_niche)
-    topology.cascade_complexity[i] = complexity(N_cascade)
-    topology.niche_distance[i] = distancetobase(N_niche, collect(keys(spe_niche))[ind_maxspe_niche])
-    topology.cascade_distance[i] = distancetobase(N_cascade, collect(keys(spe_cascade))[ind_maxspe_cascade])
-    
+        D = Dict{Symbol, Any}()
+            D[:id] = mangal_topology.id[i]
+            D[:richness] = mangal_topology.richness[i]
+            D[:links] = mangal_topology.links[i]
+            D[:connectance_real] = mangal_topology.connectance[i]
+            D[:complexity_real] = mangal_topology.complexity[i]
+            D[:distance_real] = mangal_topology.distance[i]
+            D[:model] = val
+            D[:connectance_mod] = connectance(N)
+            D[:complexity_mod] = complexity(N)
+            D[:distance_mod] = distancetobase(N, collect(keys(spe))[ind_maxspe])
+            push!(topology, D)
+    end  
 end
-
 
 CSV.write("data/topology_summary.csv", topology)
