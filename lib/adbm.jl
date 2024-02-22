@@ -32,7 +32,7 @@ end
 """
     adbmmodel
 
-function to generate netwrok using ADBM, Petchy and friends 2008
+function to generate a network using the ADBM
 
 #### References
 
