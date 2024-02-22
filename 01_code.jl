@@ -47,7 +47,10 @@ topology  = DataFrame(
             
         # specificity
         spe = specificity(N)
-        ind_maxspe = findmax(collect(values(spe)))[2]
+        gen = SpeciesInteractionNetworks.generality(N)
+        ind_maxgen = findmax(collect(values(gen)))[2]
+        #findall(x -> x == 0.0, collect(values(spe)))
+        #findmax(collect(values(spe)))
     
         D = Dict{Symbol, Any}()
             D[:id] = mangal_topology.id[i]
@@ -59,7 +62,7 @@ topology  = DataFrame(
             D[:model] = val
             D[:connectance_mod] = connectance(N)
             D[:complexity_mod] = complexity(N)
-            D[:distance_mod] = distancetobase(N, collect(keys(spe))[ind_maxspe])
+            D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
             push!(topology, D)
     end  
 end
