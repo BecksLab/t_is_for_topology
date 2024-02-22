@@ -27,10 +27,12 @@ topology  = DataFrame(
     connectance_real = Float64[],
     complexity_real = Float64[],
     distance_real = Float64[],
+    basal_real = Float64[],
     model = String[],
     connectance_mod = Float64[],
     complexity_mod = Float64[],
-    distance_mod = Float64[]
+    distance_mod = Float64[],
+    basal_mod = Float64[]
 );
 
 
@@ -45,11 +47,10 @@ topology  = DataFrame(
                 N = cascademodel(mangal_topology.richness[i], mangal_topology.connectance[i])
             end
             
-        # specificity
         spe = specificity(N)
         gen = SpeciesInteractionNetworks.generality(N)
         ind_maxgen = findmax(collect(values(gen)))[2]
-        #findall(x -> x == 0.0, collect(values(spe)))
+        basal = findall(x -> x == 0.0, collect(values(gen)))
         #findmax(collect(values(spe)))
     
         D = Dict{Symbol, Any}()
@@ -59,10 +60,12 @@ topology  = DataFrame(
             D[:connectance_real] = mangal_topology.connectance[i]
             D[:complexity_real] = mangal_topology.complexity[i]
             D[:distance_real] = mangal_topology.distance[i]
+            D[:basal_real] = mangal_topology.basal[i]
             D[:model] = val
             D[:connectance_mod] = connectance(N)
             D[:complexity_mod] = complexity(N)
             D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
+            D[:basal_mod] = length(basal)/richness(N)
             push!(topology, D)
     end  
 end
