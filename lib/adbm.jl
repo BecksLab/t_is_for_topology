@@ -1,82 +1,143 @@
 """
-    _set_attack_constant
-
-internal for adbm function, sets attack constant for species
+adbm_parameters
 """
-function _set_attack_constant(
-    attack_constant::Vector{Float64}
-)
-    a = rand(-1.0:0.25:1.0, length(attack_constant))
-    for i in axes(attack_constant)
-        attack_constant[i] = a[i]
+function adbm_parameters(parameters, e, a_adbm, ai, aj, b, h_adbm, hi, hj, n, ni, Hmethod, Nmethod)
+    parameters[:e] = e
+    parameters[:a_adbm] = a_adbm
+    parameters[:ai] = ai
+    parameters[:aj] = aj
+    parameters[:b] = b
+    parameters[:h_adbm] = h_adbm
+    parameters[:hi] = hi
+    parameters[:hj] = hj
+    parameters[:n] = n
+    parameters[:ni] = ni
+    #check Hmethod
+    if Hmethod ∈ [:ratio, :power]
+      parameters[:Hmethod] = Hmethod
+    else
+      error("Invalid value for Hmethod -- must be :ratio or :power")
     end
-    return attack_constant
-end 
-
-"""
-        _set_energy_content
-
-internal for adbm function, sets energy content for species
-"""
-function _set_energy_content(
-    energy_content::Vector{Float64},
-    mass::Vector{Float64}
-)
-    for i in axes(energy_content)
-        energy_content[i] = mass[i]
+    # check Nmethod
+    if Nmethod ∈ [:original, :biomass]
+      parameters[:Nmethod] = Nmethod
+    else
+      error("Invalid value for Nmethod -- must be :original or :biomass")
     end
-    return energy_content
-end   
+    # add empty cost matrix
+    S = size(parameters[:A],2)
+    parameters[:costMat] = ones(Float64,(S,S))
+end
 
 
 """
-    adbmmodel
+_get_adbm_terms
 
-function to generate a network using the ADBM
+This function takes the parameters for the ADBM model and returns
+the final terms used to determine feeding patterns. It is used internally by  ADBM().
+"""
+function _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
+  E = parameters[:e] .* parameters[:bodymass]
+  if parameters[:Nmethod] == :original
+    N = parameters[:n] .* (parameters[:bodymass] .^ parameters[:ni])
+  elseif parameters[:Nmethod] == :biomass
+    N = biomass
+  end
+  A_adbm = parameters[:a_adbm] * (parameters[:bodymass].^parameters[:aj]) * (parameters[:bodymass].^parameters[:ai])' # a * pred * prey
+  for i = 1:S #for each prey
+    A_adbm[:,i] = A_adbm[:,i] .* N[i]
+  end
+  λ = A_adbm
+  if parameters[:Hmethod] == :ratio
+    H = zeros(Float64,(S,S))
+    ratios = (parameters[:bodymass] ./ parameters[:bodymass]')' #PREDS IN ROWS : PREY IN COLS
+    for i = 1:S , j = 1:S
+      if ratios[j,i] < parameters[:b]
+      H[j,i] =  parameters[:h_adbm] / (parameters[:b] - ratios[j,i])
+      else
+      H[j,i] = Inf
+      end
+    end
+  elseif parameters[:Hmethod] == :power
+    H = parameters[:h_adbm] * (parameters[:bodymass].^parameters[:hj]) * (parameters[:bodymass].^parameters[:hi])' # h * pred * prey
+  end
+
+  adbmTerms = Dict{Symbol,Any}(
+  :E => E,
+  :λ => λ,
+  :H => H)
+
+  return(adbmTerms)
+end
+
+"""
+_get_feeding_links
+
+This function takes the terms calculated by getADBM_Terms() and uses them to determine the feeding
+links of species j. Used internally by ADBM().
+"""
+function _get_feeding_links(S::Int64,E::Vector{Float64}, λ::Array{Float64},
+   H::Array{Float64},biomass::Vector{Float64},j)
+
+  profit = E ./ H[j,:]
+  # Setting profit of species with zero biomass  to -1.0
+  # This prevents them being included in the profitSort
+  profit[vec(biomass .== 0.0)] .= -1.0
+
+  profs = sortperm(profit,rev = true)
+
+  λSort = λ[j,profs]
+  HSort = H[j,profs]
+  ESort = E[profs]
+
+  λH = cumsum(λSort .* HSort)
+  Eλ = cumsum(ESort .* λSort)
+
+  λH[isnan.(λH)] .= Inf
+  Eλ[isnan.(Eλ)] .= Inf
+
+  cumulativeProfit = Eλ ./ (1 .+ λH)
+
+  if all(0 .== cumulativeProfit)
+  feeding = []
+  else
+  feeding = profs[1:maximum(findall(cumulativeProfit .== maximum(cumulativeProfit)))]
+  end
+
+  #cumulativeProfit[end] = NaN
+  #feeding = profs[(append!([true],cumulativeProfit[1:end-1] .< profitSort[2:end]))]
+  return(feeding)
+end
+
+
+"""
+adbmmodel
+
+This function returns the food web based on the ADBM model of Petchey et al. 2008.
+The function takes the paramteres created by rewire_parameters() and uses 
+getADBM_Terms() and getFeedingLinks() to detemine the web structure. This function
+is called using the callback to include rewiring into biomass simulations.
 
 #### References
 
 Petchey, Owen L., Andrew P. Beckerman, Jens O. Riede, and Philip H. Warren.
 2008. “Size, Foraging, and Food Web Structure.” Proceedings of the National
 Academy of Sciences 105 (11): 4191–96. https://doi.org/10.1073/pnas.0710672105.
+
 """
-function adbmmodel(
-    species_richness::Int64,
-    mass::Vector{Float64},
-    resource_density::Vector{Float64};
-    breadth::AbstractRange = -8.0:1.0:1.0,
-    resource_constant::Float64 = -0.75,
-    energy_constant::Float64 = 1.0,
-    handling_constant::Float64 = 1.0,
-)
-    # create matrices
-    attack_constant = zeros(Float64, species_richness)
-    adbmmatrix = zeros(Float64, (species_richness, species_richness))
-    energy_content = zeros(Float64, species_richness)
-
-    # create attack constant
-    attack_constant = _set_attack_constant(attack_constant)
-
-    # energy content based on mass
-    energy_content = _set_energy_content(energy_content, mass)
-
-    b = rand(breadth)
-    b = 2^b
-
-
-    for j in axes(adbmmatrix, 1)
-        for i in axes(adbmmatrix, 2)
-            if mass[i]/mass[j] ≥ b #immediately set to zero
-                adbmmatrix[j,i] = 0.0  
-            end
-            _handling_time = handling_constant/(b - (mass[i]/mass[j]))
-            _resource_density = resource_density[i]^resource_constant
-            _energy_content = energy_content[i]*energy_constant
-            _attack_rate = (mass[i]^attack_constant[i])*(mass[j]^attack_constant[j])
-            _encounter_rate = _resource_density*_attack_rate
-            
-            adbmmatrix[j,i] = (_encounter_rate*_energy_content)/(_resource_density*_handling_time)
-        end
+function adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
+  adbmMAT = zeros(Int64,(S,S))
+  adbmTerms = _get_adbm_terms(S,parameters,biomass)
+  E = adbmTerms[:E]
+  λ = adbmTerms[:λ]
+  H = adbmTerms[:H]
+  for j = 1:S
+    if !parameters[:is_producer][j]
+      if biomass[j] > 0.0
+        feeding = _get_feeding_links(S,E,λ,H,biomass,j)
+        adbmMAT[j,feeding] .= 1
+      end
     end
-    return adbmmatrix
+  end
+  return(adbmMAT)
 end
