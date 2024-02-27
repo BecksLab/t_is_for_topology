@@ -139,5 +139,7 @@ function adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float
       end
     end
   end
-  return(adbmMAT)
+  edges = Binary(adbmMAT)
+  nodes = Unipartite(edges)
+  return SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
 end
