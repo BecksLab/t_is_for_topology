@@ -126,7 +126,7 @@ Academy of Sciences 105 (11): 4191–96. https://doi.org/10.1073/pnas.0710672105
 
 """
 function adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
-  adbmMAT = zeros(Int64,(S,S))
+  adbmMAT = zeros(Bool,(S,S))
   adbmTerms = _get_adbm_terms(S,parameters,biomass)
   E = adbmTerms[:E]
   λ = adbmTerms[:λ]
