@@ -34,7 +34,7 @@ end
 _get_adbm_terms
 
 This function takes the parameters for the ADBM model and returns
-the final terms used to determine feeding patterns. It is used internally by  ADBM().
+the final terms used to determine feeding patterns. It is used internally by  adbmmodel().
 """
 function _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
   E = parameters[:e] .* parameters[:bodymass]
@@ -73,8 +73,8 @@ end
 """
 _get_feeding_links
 
-This function takes the terms calculated by getADBM_Terms() and uses them to determine the feeding
-links of species j. Used internally by ADBM().
+This function takes the terms calculated by _get_adbm_terms() and uses them to determine the feeding
+links of species j. Used internally by adbmmodel().
 """
 function _get_feeding_links(S::Int64,E::Vector{Float64}, λ::Array{Float64},
    H::Array{Float64},biomass::Vector{Float64},j)
