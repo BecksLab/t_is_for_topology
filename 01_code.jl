@@ -6,6 +6,7 @@ using Graphs
 using Mangal
 using Random
 using SpeciesInteractionNetworks
+using StatsBase
 
 # Load the functions we need from the lib folder
 include("lib/adbm.jl")

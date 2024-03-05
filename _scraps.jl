@@ -16,3 +16,5 @@ parameters[:n] = 1.0
 parameters[:ni] = 1.0
 
 adbmmodel(S, parameters, rand(Float64, S))
+
+nestedhierarchymodel(S, 10)
