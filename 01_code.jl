@@ -10,13 +10,11 @@ using SpeciesInteractionNetworks
 # Load the functions we need from the lib folder
 include("lib/adbm.jl")
 include("lib/cascade.jl")
-include("lib/random.jl")
 #include("lib/nestedhierarchy.jl")
+include("lib/random.jl")
 
 # import mangal networks
 mangal_topology = CSV.read("data/mangal_summary.csv", DataFrame)
-
-model_names = ["random", "niche", "cascade"]
 
 # create df for the outputs to be stored (long format)
 
@@ -35,6 +33,9 @@ topology  = DataFrame(
     basal_mod = Float64[]
 );
 
+## Structural networks
+
+model_names = ["random", "niche", "cascade"]
 
     for i in 1:(nrow(mangal_topology))
         
@@ -69,5 +70,7 @@ topology  = DataFrame(
             push!(topology, D)
     end  
 end
+
+## ADBM networks
 
 CSV.write("data/topology_summary.csv", topology)
