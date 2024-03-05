@@ -23,7 +23,7 @@ function nestedhierarchymodel(S::Int64, L::Int64)
 
     # Initiate matrix
     edges = Binary(zeros(Bool, (S, S)))
-    nodes = Unipartite(Binary(edgs))
+    nodes = Unipartite(edges)
     A = SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
 
     Co = (L/(S*S))
@@ -113,7 +113,7 @@ function nestedhierarchymodel(S::Int64, L::Int64)
             linkstoassign == 0 && break
 
             # Assign link
-            A[consumer,resource] = true
+            A[consumer, resource] = true
             linkstoassign = linkstoassign - 1
 
             # Update the predatored species array
@@ -179,7 +179,7 @@ function nestedhierarchymodel(S::Int64, L::Int64)
         # STAGE 4: Randomly assign species from the rest of the resources
 
         # Rest of the unassigned species!
-        diet = collect(A.edges[consumer])
+        diet = collect(A[species(A)[consumer], :])
 
         # Get rid of specis already assigned to the current consumer
         not_consumed = setdiff(species_pool, diet)
@@ -192,7 +192,7 @@ function nestedhierarchymodel(S::Int64, L::Int64)
 
             linkstoassign == 0 && break
 
-            A.edges[consumer, sp_pos[resource]] = true
+            A[consumer, sp_pos[resource]] = true
             linkstoassign = linkstoassign - 1
 
         end
