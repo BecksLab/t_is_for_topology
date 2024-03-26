@@ -11,6 +11,7 @@ using StatsBase
 # Load the functions we need from the lib folder
 include("lib/adbm.jl")
 include("lib/cascade.jl")
+include("lib/maxent.jl")
 include("lib/nestedhierarchy.jl")
 include("lib/random.jl")
 
@@ -36,7 +37,7 @@ topology  = DataFrame(
 
 ## Structural networks
 
-model_names = ["random", "niche", "cascade", "hierarchy"]
+model_names = ["random", "niche", "cascade", "hierarchy", "maxent"]
 
     for i in 1:(nrow(mangal_topology))
         
@@ -47,8 +48,13 @@ model_names = ["random", "niche", "cascade", "hierarchy"]
                 N = structuralmodel(NicheModel, mangal_topology.richness[i], mangal_topology.connectance[i])
             elseif val == "cascade"
                 N = cascademodel(mangal_topology.richness[i], mangal_topology.connectance[i])
-            else val == "hierarchy"
+            elseif val == "hierarchy"
                 N = nestedhierarchymodel(mangal_topology.richness[i], mangal_topology.links[i])
+            else val == "maxent"
+                N = maxentmodel(mangal_topology.richness[i], mangal_topology.links[i];
+                # TODO
+                nchains = 2,
+                nsteps = 20)
             end
             
         spe = specificity(N)
