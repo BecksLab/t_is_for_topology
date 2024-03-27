@@ -5,7 +5,7 @@ using Graphs
 #using EcologicalNetworks
 using Mangal
 using Random
-#using RandomBooleanMatrices
+using RandomBooleanMatrices
 using SpeciesInteractionNetworks
 using StatsBase
 
