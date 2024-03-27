@@ -1,5 +1,5 @@
 """
-maxentmodel(species::Int64, links::Int64; nchains::Int64 = 4, nsteps::Int64 = 2000)
+maxentmodel(species::Int64, connectance::Float64; nchains::Int64 = 4, nsteps::Int64 = 2000)
 
     Returns the adjacency matrix of maximum SVD-entropy constrained 
     by the joint degree sequence of a networks using a simulating 
@@ -18,11 +18,11 @@ maxentmodel(species::Int64, links::Int64; nchains::Int64 = 4, nsteps::Int64 = 20
 """
 function maxentmodel(
     species::Int64, 
-    links::Int64;
+    connectance::Float64;
     nchains::Int64 = 4,
     nsteps::Int64 = 2000)
 
-    N = randommodel(species, links)
+    N = structuralmodel(NicheModel, species, connectance)
     # matrix generator object
     n = zeros(Int64, (species,species))
     for i in axes(n, 1)

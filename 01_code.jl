@@ -52,7 +52,7 @@ model_names = ["random", "niche", "cascade", "hierarchy", "maxent"]
             elseif val == "hierarchy"
                 N = nestedhierarchymodel(mangal_topology.richness[i], mangal_topology.links[i])
             else val == "maxent"
-                N = maxentmodel(mangal_topology.richness[i], mangal_topology.links[i];
+                N = maxentmodel(mangal_topology.richness[i], mangal_topology.connectance[i];
                 # TODO
                 nchains = 2,
                 nsteps = 20)
