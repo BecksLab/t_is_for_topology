@@ -22,13 +22,26 @@ function maxentmodel(
     nchains::Int64 = 4,
     nsteps::Int64 = 2000)
 
+    N = randommodel(species, links)
+    # matrix generator object
+    n = zeros(Int64, (species,species))
+    for i in axes(n, 1)
+        for j in axes(n, 2)
+            if N.edges[i,j] == true
+                n[i,j] = 1
+            end
+        end
+    end
+    rmg = matrixrandomizer(n)
     # initial vector for SVD-entropies and object for best matrices
     entropies = zeros(Float64, nsteps, nchains)
     A = []
 
     for j in 1:nchains
         # generate a new random matrix with the same row and column sums (joint degree sequence) as N
-        A0 = randommodel(species, links)
+        edges =  Binary(rand(rmg))
+        nodes = Unipartite(edges)
+        A0 = SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
         best = complexity(A0)
         entropies[1,j] = best
 
