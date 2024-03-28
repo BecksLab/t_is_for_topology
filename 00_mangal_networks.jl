@@ -24,9 +24,11 @@ for i in eachindex(mangal_networks)
     N = simplify(mangalnetwork(mangal_networks[i].id))
 
     gen = SpeciesInteractionNetworks.generality(N)
+    ind_maxgen = findmax(collect(values(gen)))[2]
     basal = findall(x -> x == 0.0, collect(values(gen))) # find species with generality of zero
 
     vul = SpeciesInteractionNetworks.vulnerability(N)
+    ind_maxgen = findmax(collect(values(vul)))[2]
     top = findall(x -> x == 0.0, collect(values(vul))) # find species with vulnerability of zero
 
     mangal_topology.id[i] = mangal_networks[i].id

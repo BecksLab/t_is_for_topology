@@ -29,6 +29,7 @@ topology  = DataFrame(
     complexity_real = Float64[],
     distance_real = Float64[],
     basal_real = Float64[],
+    top_real = Float64[],
     model = String[],
     connectance_mod = Float64[],
     complexity_mod = Float64[],
@@ -62,10 +63,11 @@ for _ in 1:n_reps
             end
             
         gen = SpeciesInteractionNetworks.generality(N)
-        #ind_maxgen = findmax(collect(values(gen)))[2]
+        ind_maxgen = findmax(collect(values(gen)))[2]
         basal = findall(x -> x == 0.0, collect(values(gen)))
 
         vul = SpeciesInteractionNetworks.vulnerability(N)
+        ind_maxgen = findmax(collect(values(vul)))[2]
         top = findall(x -> x == 0.0, collect(values(vul)))
     
         D = Dict{Symbol, Any}()
@@ -76,6 +78,7 @@ for _ in 1:n_reps
             D[:complexity_real] = mangal_topology.complexity[i]
             D[:distance_real] = mangal_topology.distance[i]
             D[:basal_real] = mangal_topology.basal[i]
+            D[:top_real] = mangal_topology.top[i]
             D[:model] = val
             D[:connectance_mod] = connectance(N)
             D[:complexity_mod] = complexity(N)
