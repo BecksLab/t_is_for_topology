@@ -33,7 +33,8 @@ topology  = DataFrame(
     connectance_mod = Float64[],
     complexity_mod = Float64[],
     distance_mod = Float64[],
-    basal_mod = Float64[]
+    basal_mod = Float64[],
+    top_mod = Float64[]
 );
 
 ## Structural networks
@@ -60,11 +61,12 @@ for _ in 1:n_reps
                 nsteps = 20)
             end
             
-        spe = specificity(N)
         gen = SpeciesInteractionNetworks.generality(N)
-        ind_maxgen = findmax(collect(values(gen)))[2]
+        #ind_maxgen = findmax(collect(values(gen)))[2]
         basal = findall(x -> x == 0.0, collect(values(gen)))
-        #findmax(collect(values(spe)))
+
+        vul = SpeciesInteractionNetworks.vulnerability(N)
+        top = findall(x -> x == 0.0, collect(values(vul)))
     
         D = Dict{Symbol, Any}()
             D[:id] = mangal_topology.id[i]
@@ -79,6 +81,7 @@ for _ in 1:n_reps
             D[:complexity_mod] = complexity(N)
             D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
             D[:basal_mod] = length(basal)/richness(N)
+            D[:top_mod] = length(top)/richness(N)
             push!(topology, D)
         end  
     end
