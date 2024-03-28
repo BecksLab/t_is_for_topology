@@ -1,5 +1,6 @@
 using CSV
 using DataFrames
+using JLD
 using Mangal
 using SpeciesInteractionNetworks
 
@@ -35,3 +36,6 @@ for i in eachindex(mangal_networks)
 end
 
 CSV.write("data/mangal_summary.csv", mangal_topology)
+
+# save mangal netwroks for later import
+save(joinpath("data", "mangal_networks.jld"), "data", mangal_topology)
