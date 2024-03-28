@@ -39,7 +39,9 @@ topology  = DataFrame(
 ## Structural networks
 
 model_names = ["random", "niche", "cascade", "hierarchy", "maxent"]
+n_reps = 10 #number of reps for each model for each network
 
+for _ in 1:n_reps
     for i in 1:(nrow(mangal_topology))
         
         for (j, val) in enumerate(model_names)
@@ -78,7 +80,8 @@ model_names = ["random", "niche", "cascade", "hierarchy", "maxent"]
             D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
             D[:basal_mod] = length(basal)/richness(N)
             push!(topology, D)
-    end  
+        end  
+    end
 end
 
 ## ADBM networks
