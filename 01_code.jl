@@ -67,7 +67,6 @@ for _ in 1:n_reps
         basal = findall(x -> x == 0.0, collect(values(gen)))
 
         vul = SpeciesInteractionNetworks.vulnerability(N)
-        ind_maxgen = findmax(collect(values(vul)))[2]
         top = findall(x -> x == 0.0, collect(values(vul)))
     
         D = Dict{Symbol, Any}()
