@@ -36,8 +36,8 @@ for i in eachindex(mangal_networks)
     mangal_topology.connectance[i] = connectance(N)
     mangal_topology.complexity[i] = complexity(N)
     mangal_topology.distance[i] = distancetobase(N, collect(keys(gen))[ind_maxgen])
-    mangal_topology.basal[i] = length(basal)/richness(N)
-    mangal_topology.top[i] = length(top)/richness(N)
+    mangal_topology.basal[i] = length(basal)
+    mangal_topology.top[i] = length(top)
 end
 
 CSV.write("data/mangal_summary.csv", mangal_topology)

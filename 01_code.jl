@@ -84,8 +84,8 @@ for _ in 1:n_reps
             D[:connectance_mod] = connectance(N)
             D[:complexity_mod] = complexity(N)
             D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
-            D[:basal_mod] = length(basal)/richness(N)
-            D[:top_mod] = length(top)/richness(N)
+            D[:basal_mod] = length(basal)
+            D[:top_mod] = length(top)
             push!(topology, D)
         end  
     end
