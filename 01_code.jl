@@ -63,11 +63,11 @@ for _ in 1:n_reps
             end
             
         gen = SpeciesInteractionNetworks.generality(N)
-        ind_maxgen = findmax(collect(values(gen)))[2]
         basal = findall(x -> x == 0.0, collect(values(gen)))
 
         vul = SpeciesInteractionNetworks.vulnerability(N)
         top = findall(x -> x == 0.0, collect(values(vul)))
+        ind_minvul = findmin(collect(values(vul)))[2]
     
         D = Dict{Symbol, Any}()
             D[:id] = mangal_topology.id[i]
@@ -81,7 +81,7 @@ for _ in 1:n_reps
             D[:model] = val
             D[:connectance_mod] = connectance(N)
             D[:complexity_mod] = complexity(N)
-            D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
+            D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_minvul])
             D[:basal_mod] = length(basal)/richness(N)
             D[:top_mod] = length(top)/richness(N)
             push!(topology, D)
