@@ -23,8 +23,9 @@ function maxentmodel(
     nsteps::Int64 = 2000)
 
     N = structuralmodel(NicheModel, species, connectance)
+    N = simplify(N)
     # matrix generator object
-    n = zeros(Int64, (species,species))
+    n = zeros(Int64, (richness(N),richness(N)))
     for i in axes(n, 1)
         for j in axes(n, 2)
             if N.edges[i,j] == true
@@ -42,6 +43,7 @@ function maxentmodel(
         edges =  Binary(rand(rmg))
         nodes = Unipartite(edges)
         A0 = SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
+        A0 = simplify(A0)
         best = complexity(A0)
         entropies[1,j] = best
 

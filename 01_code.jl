@@ -61,6 +61,8 @@ for _ in 1:n_reps
                 nchains = 2,
                 nsteps = 20)
             end
+
+        N = simplify(N)
             
         gen = SpeciesInteractionNetworks.generality(N)
         ind_maxgen = findmax(collect(values(gen)))[2]
