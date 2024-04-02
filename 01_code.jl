@@ -57,16 +57,16 @@ for _ in 1:n_reps
                 N = nestedhierarchymodel(mangal_topology.richness[i], mangal_topology.links[i])
             else val == "maxent"
                 N = maxentmodel(mangal_topology.richness[i], mangal_topology.connectance[i];
-                # TODO
+                # ❗ TODO
                 nchains = 2,
                 nsteps = 20)
             end
             
         gen = SpeciesInteractionNetworks.generality(N)
+        ind_maxgen = findmax(collect(values(gen)))[2]
         basal = findall(x -> x == 0.0, collect(values(gen)))
 
         vul = SpeciesInteractionNetworks.vulnerability(N)
-        top = findall(x -> x == 0.0, collect(values(vul)))
         ind_minvul = findmin(collect(values(vul)))[2]
     
         D = Dict{Symbol, Any}()
@@ -81,7 +81,7 @@ for _ in 1:n_reps
             D[:model] = val
             D[:connectance_mod] = connectance(N)
             D[:complexity_mod] = complexity(N)
-            D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_minvul])
+            D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
             D[:basal_mod] = length(basal)/richness(N)
             D[:top_mod] = length(top)/richness(N)
             push!(topology, D)
