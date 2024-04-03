@@ -17,13 +17,10 @@ maxentmodel(species::Int64, connectance::Float64; nchains::Int64 = 4, nsteps::In
     e1011458. https://doi.org/10.1371/journal.pcbi.1011458. 
 """
 function maxentmodel(
-    species::Int64, 
-    connectance::Float64;
+    N::Any;
     nchains::Int64 = 4,
     nsteps::Int64 = 2000)
 
-    N = structuralmodel(NicheModel, species, connectance)
-    N = simplify(N)
     # matrix generator object
     n = zeros(Int64, (richness(N),richness(N)))
     for i in axes(n, 1)
@@ -77,5 +74,5 @@ function maxentmodel(
     # find the network with maximum entropy among all chains
     imax = findmax(entropies[nsteps,:])[2]
     Amax = (A = A[imax], entropies = entropies)
-    return Amax.A
+    return simplify(Amax.A)
 end
