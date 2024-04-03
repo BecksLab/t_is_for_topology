@@ -42,5 +42,5 @@ end
 
 CSV.write("data/mangal_summary.csv", mangal_topology)
 
-# save mangal netwroks for later import
-save(joinpath("data", "mangal_networks.jld"), "data", mangal_networks)
+## Write file
+CSV.write(joinpath("data", "mangal_networks.csv"), mangal_networks)
