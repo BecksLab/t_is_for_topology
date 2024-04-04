@@ -17,7 +17,7 @@ maxentmodel(species::Int64, connectance::Float64; nchains::Int64 = 4, nsteps::In
     e1011458. https://doi.org/10.1371/journal.pcbi.1011458. 
 """
 function maxentmodel(
-    N::Any;
+    N::SpeciesInteractionNetwork{<:Partiteness, <:Binary};
     nchains::Int64 = 4,
     nsteps::Int64 = 2000)
 
