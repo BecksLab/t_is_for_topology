@@ -2,6 +2,7 @@ using CSV
 using DataFrames
 using JLD
 using Mangal
+using ProgressMeter
 using SpeciesInteractionNetworks
 
 network_count = 20
@@ -17,11 +18,16 @@ mangal_topology = DataFrame(
     complexity = zeros(Float64, network_count),
     distance = zeros(Float64, network_count),
     basal = zeros(Float64, network_count),
-    top = zeros(Float64, network_count)
+    top = zeros(Float64, network_count),
+    S1 = zeros(Float64, network_count),
+    S2 = zeros(Float64, network_count),
+    S4 = zeros(Float64, network_count),
+    S5 = zeros(Float64, network_count),
 ); 
 
-for i in eachindex(mangal_networks)
+@showprogress for i in eachindex(mangal_networks)
     N = simplify(mangalnetwork(mangal_networks[i].id))
+    N = render(Binary, N) # make binary
 
     gen = SpeciesInteractionNetworks.generality(N)
     ind_maxgen = findmax(collect(values(gen)))[2]
@@ -38,9 +44,13 @@ for i in eachindex(mangal_networks)
     mangal_topology.distance[i] = distancetobase(N, collect(keys(gen))[ind_maxgen])
     mangal_topology.basal[i] = length(basal)
     mangal_topology.top[i] = length(top)
+    mangal_topology.S1[i] = length(findmotif(motifs(Unipartite, 3)[1], N))
+    mangal_topology.S2[i] = length(findmotif(motifs(Unipartite, 3)[2], N))
+    mangal_topology.S4[i] = length(findmotif(motifs(Unipartite, 3)[4], N))
+    mangal_topology.S5[i] = length(findmotif(motifs(Unipartite, 3)[5], N))
 end
 
 CSV.write("data/mangal_summary.csv", mangal_topology)
 
 ## Write file
-CSV.write(joinpath("data", "mangal_networks.csv"), mangal_networks)
+CSV.write("data/mangal_networks.csv", mangal_networks)

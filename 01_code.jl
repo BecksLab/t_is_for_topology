@@ -41,8 +41,8 @@ topology  = DataFrame(
 model_names = ["random", "niche", "cascade", "hierarchy"]
 n_reps = 10 #number of reps for each model for each network
 
-@showprogress for _ in 1:n_reps
-    for i in 1:(nrow(mangal_topology))
+for _ in 1:n_reps
+    @showprogress for i in 1:(nrow(mangal_topology))
         
         for (j, val) in enumerate(model_names)
             if val == "random"
@@ -55,7 +55,7 @@ n_reps = 10 #number of reps for each model for each network
                 N = nestedhierarchymodel(mangal_topology.richness[i], mangal_topology.links[i])
             end
 
-        #N = simplify(N)
+        N = simplify(N)
             
         gen = SpeciesInteractionNetworks.generality(N)
         ind_maxgen = findmax(collect(values(gen)))[2]
@@ -72,10 +72,10 @@ n_reps = 10 #number of reps for each model for each network
             D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
             D[:basal_mod] = length(basal)
             D[:top_mod] = length(top)
-            D[:S1_mod] = findmotif(motifs(Unipartite, 3)[1], N)
-            D[:S2_mod] = findmotif(motifs(Unipartite, 3)[2], N)
-            D[:S4_mod] = findmotif(motifs(Unipartite, 3)[4], N)
-            D[:S5_mod] = findmotif(motifs(Unipartite, 3)[5], N)
+            D[:S1_mod] = length(findmotif(motifs(Unipartite, 3)[1], N))
+            D[:S2_mod] = length(findmotif(motifs(Unipartite, 3)[2], N))
+            D[:S4_mod] = length(findmotif(motifs(Unipartite, 3)[4], N))
+            D[:S5_mod] = length(findmotif(motifs(Unipartite, 3)[5], N))
             push!(topology, D)
         end  
     end
@@ -86,7 +86,7 @@ end
 mangal_networks = DataFrame(CSV.File(joinpath("data", "mangal_networks.csv")))
 
 for _ in 1:n_reps
-    for i in 1:(nrow(mangal_networks))
+    @showprogress for i in 1:(nrow(mangal_networks))
 
         mangal_network = simplify(mangalnetwork(mangal_networks.id[i]))
         
