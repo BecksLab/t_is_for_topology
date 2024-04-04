@@ -4,6 +4,7 @@ using Distributions
 using Graphs
 #using EcologicalNetworks
 using Mangal
+using ProgressMeter
 using Random
 using RandomBooleanMatrices
 using SpeciesInteractionNetworks
@@ -23,19 +24,16 @@ mangal_topology = CSV.read("data/mangal_summary.csv", DataFrame)
 
 topology  = DataFrame(
     id = Int64[],
-    richness = Int64[],
-    links = Int64[],
-    connectance_real = Float64[],
-    complexity_real = Float64[],
-    distance_real = Float64[],
-    basal_real = Float64[],
-    top_real = Float64[],
     model = String[],
     connectance_mod = Float64[],
     complexity_mod = Float64[],
     distance_mod = Float64[],
     basal_mod = Float64[],
-    top_mod = Float64[]
+    top_mod = Float64[],
+    S1_mod = Float64[],
+    S2_mod = Float64[],
+    S4_mod = Float64[],
+    S5_mod = Float64[]
 );
 
 ## Structural networks
@@ -43,7 +41,7 @@ topology  = DataFrame(
 model_names = ["random", "niche", "cascade", "hierarchy"]
 n_reps = 10 #number of reps for each model for each network
 
-for _ in 1:n_reps
+@showprogress for _ in 1:n_reps
     for i in 1:(nrow(mangal_topology))
         
         for (j, val) in enumerate(model_names)
@@ -57,30 +55,27 @@ for _ in 1:n_reps
                 N = nestedhierarchymodel(mangal_topology.richness[i], mangal_topology.links[i])
             end
 
-        N = simplify(N)
+        #N = simplify(N)
             
         gen = SpeciesInteractionNetworks.generality(N)
         ind_maxgen = findmax(collect(values(gen)))[2]
         basal = findall(x -> x == 0.0, collect(values(gen)))
 
         vul = SpeciesInteractionNetworks.vulnerability(N)
-        ind_minvul = findmin(collect(values(vul)))[2]
+        top = findall(x -> x == 0.0, collect(values(vul))) # find species with vulnerability of zero
     
         D = Dict{Symbol, Any}()
             D[:id] = mangal_topology.id[i]
-            D[:richness] = mangal_topology.richness[i]
-            D[:links] = mangal_topology.links[i]
-            D[:connectance_real] = mangal_topology.connectance[i]
-            D[:complexity_real] = mangal_topology.complexity[i]
-            D[:distance_real] = mangal_topology.distance[i]
-            D[:basal_real] = mangal_topology.basal[i]
-            D[:top_real] = mangal_topology.top[i]
             D[:model] = val
             D[:connectance_mod] = connectance(N)
             D[:complexity_mod] = complexity(N)
             D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
             D[:basal_mod] = length(basal)
             D[:top_mod] = length(top)
+            D[:S1_mod] = findmotif(motifs(Unipartite, 3)[1], N)
+            D[:S2_mod] = findmotif(motifs(Unipartite, 3)[2], N)
+            D[:S4_mod] = findmotif(motifs(Unipartite, 3)[4], N)
+            D[:S5_mod] = findmotif(motifs(Unipartite, 3)[5], N)
             push!(topology, D)
         end  
     end
@@ -105,23 +100,20 @@ for _ in 1:n_reps
         basal = findall(x -> x == 0.0, collect(values(gen)))
 
         vul = SpeciesInteractionNetworks.vulnerability(N)
-        ind_minvul = findmin(collect(values(vul)))[2]
+        top = findall(x -> x == 0.0, collect(values(vul))) # find species with vulnerability of zero
         
         D = Dict{Symbol, Any}()
             D[:id] = mangal_topology.id[i]
-            D[:richness] = mangal_topology.richness[i]
-            D[:links] = mangal_topology.links[i]
-            D[:connectance_real] = mangal_topology.connectance[i]
-            D[:complexity_real] = mangal_topology.complexity[i]
-            D[:distance_real] = mangal_topology.distance[i]
-            D[:basal_real] = mangal_topology.basal[i]
-            D[:top_real] = mangal_topology.top[i]
             D[:model] = "maxent"
             D[:connectance_mod] = connectance(N)
             D[:complexity_mod] = complexity(N)
             D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
             D[:basal_mod] = length(basal)
             D[:top_mod] = length(top)
+            D[:S1_mod] = length(findmotif(motifs(Unipartite, 3)[1], N))
+            D[:S2_mod] = length(findmotif(motifs(Unipartite, 3)[2], N))
+            D[:S4_mod] = length(findmotif(motifs(Unipartite, 3)[4], N))
+            D[:S5_mod] = length(findmotif(motifs(Unipartite, 3)[5], N))
             push!(topology, D)
         end
     end 
