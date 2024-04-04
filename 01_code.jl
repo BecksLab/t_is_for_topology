@@ -19,7 +19,6 @@ include("lib/random.jl")
 
 # import mangal networks
 mangal_topology = CSV.read("data/mangal_summary.csv", DataFrame)
-mangal_networks = DataFrame(CSV.File("data/mangal_networks.csv"))
 
 # create df for the outputs to be stored (long format)
 
@@ -45,7 +44,7 @@ n_reps = 10 #number of reps for each model for each network
 for _ in 1:n_reps
     @showprogress for i in 1:(nrow(mangal_topology))
         
-        mangal_network = simplify(mangalnetwork(mangal_networks.id[i]))
+        mangal_network = simplify(mangalnetwork(mangal_topology.id[i]))
         mangal_network = render(Binary, mangal_network)
 
         for (j, val) in enumerate(model_names)
