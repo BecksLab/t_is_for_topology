@@ -2,6 +2,7 @@ using CSV
 using DataFrames
 using Distributions
 using Graphs
+using JLD2
 #using EcologicalNetworks
 using Mangal
 using ProgressMeter
@@ -18,7 +19,8 @@ include("lib/nestedhierarchy.jl")
 include("lib/random.jl")
 
 # import mangal networks
-mangal_topology = CSV.read("data/mangal_summary.csv", DataFrame)
+mangal_networks = load_object("data/mangal_networks.jlds")
+mangal_summary = CSV.read("data/mangal_summary.csv", DataFrame)
 
 # create df for the outputs to be stored (long format)
 
@@ -42,21 +44,23 @@ model_names = ["random", "niche", "cascade", "hierarchy", "maxent"]
 n_reps = 10 #number of reps for each model for each network
 
 for _ in 1:n_reps
-    @showprogress for i in 1:(nrow(mangal_topology))
+    @showprogress for i in eachindex(mangal_networks)
         
-        mangal_network = simplify(mangalnetwork(mangal_topology.id[i]))
-        mangal_network = render(Binary, mangal_network)
+        mangal_network = render(Binary, mangal_networks[i])
+        mangal_rich = richness(mangal_network)
+        mangal_connectance = connectance(mangal_network)
+        mangal_links = links(mangal_network)
 
         for (j, val) in enumerate(model_names)
             if val == "random"
                 N = nullmodel(Connectance, mangal_network)
-                N = randomdraws(N)
+                N = randomdraws(N) # from probabalistic to binary
             elseif val == "niche"
-                N = structuralmodel(NicheModel, mangal_topology.richness[i], mangal_topology.connectance[i])
+                N = structuralmodel(NicheModel, mangal_rich, mangal_connectance)
             elseif val == "cascade"
-                N = cascademodel(mangal_topology.richness[i], mangal_topology.connectance[i])
+                N = cascademodel(mangal_rich, mangal_connectance)
             elseif val == "hierarchy"
-                N = nestedhierarchymodel(mangal_topology.richness[i], mangal_topology.links[i])
+                N = nestedhierarchymodel(mangal_rich, mangal_links)
             else val == "maxent"
                 N = maxentmodel(mangal_network;
                 # ❗ TODO
@@ -75,7 +79,7 @@ for _ in 1:n_reps
             top = findall(x -> x == 0.0, collect(values(vul))) # find species with vulnerability of zero
      
             D = Dict{Symbol, Any}()
-                D[:id] = mangal_topology.id[i]
+                D[:id] = mangal_summary.id[i]
                 D[:model] = val
                 D[:connectance_mod] = connectance(N)
                 D[:complexity_mod] = complexity(N)

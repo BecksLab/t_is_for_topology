@@ -1,6 +1,6 @@
 using CSV
 using DataFrames
-using JLD
+using JLD2
 using Mangal
 using ProgressMeter
 using SpeciesInteractionNetworks
@@ -25,13 +25,21 @@ mangal_topology = DataFrame(
     S5 = Float64[],
 ); 
 
+# make object to store each network so we can import it later
+networks = Any[]
+
 @showprogress for i in eachindex(mangal_networks)
     N = simplify(mangalnetwork(mangal_networks[i].id))
-    N = render(Binary, N) # make binary
-
+    
     if richness(N) <= 200 # remove large networks because they make things slow
+        
+        push!(networks, N) # push netwrork 'as is'
+
+        N = render(Binary, N) # make binary
+
+        # now we calcualte relevant 'summary statistics'
         gen = SpeciesInteractionNetworks.generality(N)
-        ind_maxgen = findmax(collect(values(gen)))[2]
+        ind_maxgen = findmax(collect(values(gen)))[2] # find a species with maximal generality
         basal = findall(x -> x == 0.0, collect(values(gen))) # find species with generality of zero
     
         vul = SpeciesInteractionNetworks.vulnerability(N)
@@ -53,6 +61,9 @@ mangal_topology = DataFrame(
         push!(mangal_topology, D)
     end
 end
+
+## Write networks as object
+save_object("data/mangal_networks.jlds", networks)
 
 ## Write file
 CSV.write("data/mangal_networks.csv", mangal_networks)
