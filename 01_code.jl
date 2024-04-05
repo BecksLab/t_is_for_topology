@@ -41,10 +41,10 @@ topology  = DataFrame(
 ## Structural networks
 
 model_names = ["random", "niche", "cascade", "hierarchy", "maxent"]
-n_reps = 10 #number of reps for each model for each network
+n_reps = 40 #number of reps for each model for each network
 
-for _ in 1:n_reps
-    @showprogress for i in eachindex(mangal_networks)
+@showprogress for _ in 1:n_reps
+    for i in eachindex(mangal_networks)
         
         mangal_network = render(Binary, mangal_networks[i])
         mangal_rich = richness(mangal_network)
