@@ -16,16 +16,17 @@ include("lib/functions/adbm.jl")
 include("lib/functions/cascade.jl")
 include("lib/functions/maxent.jl")
 include("lib/functions/nestedhierarchy.jl")
+include("lib/functions/neutral.jl")
 include("lib/functions/random.jl")
 
 # import mangal networks
-mangal_networks = load_object("data/raw/mangal_networks.jlds")
-mangal_summary = CSV.read("data/raw/mangal_summary.csv", DataFrame)
+mangal_networks = load_object("data/raw/mangal/mangal_networks.jlds")
+mangal_summary = CSV.read("data/processed/mangal_summary.csv", DataFrame)
 
 # create df for the outputs to be stored (long format)
 
 topology  = DataFrame(
-    id = Int64[],
+    id = Any[],
     model = String[],
     connectance_mod = Float64[],
     complexity_mod = Float64[],
@@ -96,6 +97,64 @@ n_reps = 40 #number of reps for each model for each network
 end
 
 ## Neutral networks
+
+# import mangal networks
+nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
+
+model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral"]
+
+@showprogress for _ in 1:n_reps
+    for i in eachindex(nz_networks)
+    
+        network = render(Binary, nz_networks[i].network)
+        abun = nz_networks[i].abundance
+        mass = nz_networks[i].mass
+        id = nz_networks[i].id
+
+        for (j, val) in enumerate(model_names)
+            if val == "random"
+                N = nullmodel(Connectance, network)
+                N = randomdraws(N) # from probabalistic to binary
+            elseif val == "niche"
+                N = structuralmodel(NicheModel, richness(network), connectance(network))
+            elseif val == "cascade"
+                N = cascademodel(richness(network), connectance(network))
+            elseif val == "hierarchy"
+                N = nestedhierarchymodel(richness(network), links(network))
+            elseif val == "maxent"
+                N = maxentmodel(network;
+                # ❗ TODO
+                nchains = 2,
+                nsteps = 20)
+            else val == "neutral"
+                neutral_model(abun, links(network))
+            end
+        
+            N = simplify(N)
+            N = render(Binary, N)
+        
+            gen = SpeciesInteractionNetworks.generality(N)
+            ind_maxgen = findmax(collect(values(gen)))[2]
+            basal = findall(x -> x == 0.0, collect(values(gen)))
+
+            vul = SpeciesInteractionNetworks.vulnerability(N)
+            top = findall(x -> x == 0.0, collect(values(vul))) # find species with vulnerability of zero
+     
+            D = Dict{Symbol, Any}()
+                D[:id] = id
+                D[:model] = val
+                D[:connectance_mod] = connectance(N)
+                D[:complexity_mod] = complexity(N)
+                D[:distance_mod] = distancetobase(N, collect(keys(gen))[ind_maxgen])
+                D[:basal_mod] = length(basal)
+                D[:top_mod] = length(top)
+                D[:S1_mod] = length(findmotif(motifs(Unipartite, 3)[1], N))
+                D[:S2_mod] = length(findmotif(motifs(Unipartite, 3)[2], N))
+                D[:S4_mod] = length(findmotif(motifs(Unipartite, 3)[4], N))
+                D[:S5_mod] = length(findmotif(motifs(Unipartite, 3)[5], N))
+        end
+    end
+end
 
 ## ADBM networks
 

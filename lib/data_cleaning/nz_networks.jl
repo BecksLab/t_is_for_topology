@@ -4,6 +4,7 @@ mutable struct NZ_foodweb
     abundance::Vector{Float64}
     mass::Vector{Float64}
     network::SpeciesInteractionNetwork{<:Partiteness, <:Binary}
+    id::Any
 end
 
 # Abundance data
@@ -42,7 +43,7 @@ function abundance_data_NZ(fw_name)
   # get abundance data for all taxa in network
   abund = abund_fw[in(taxa_N).(abund_taxa), :no_m2]
   mass = abund_fw[in(taxa_N).(abund_taxa), :dw]
-  return NZ_foodweb(abund, mass, N)
+  return NZ_foodweb(abund, mass, N, fw_name)
 end
 
 # get the abundance data of all food webs in New Zealand
@@ -50,5 +51,54 @@ NZ_webs = abundance_data_NZ.(fw_names)
 
 ## Write networks as object
 save_object("data/raw/new_zealand/nz_networks.jlds", NZ_webs)
-## Write files
-#TODO
+
+# create summary of networks
+
+# make a nice 'dataframe' to store network data
+nz_topology = DataFrame(
+    id = Any[],
+    richness = Int64[],
+    links = Int64[],
+    connectance = Float64[],
+    complexity = Float64[],
+    distance = Float64[],
+    basal = Float64[],
+    top = Float64[],
+    S1 = Float64[],
+    S2 = Float64[],
+    S4 = Float64[],
+    S5 = Float64[],
+); 
+
+@showprogress for i in eachindex(NZ_webs)
+    
+  N = simplify(NZ_webs[i].network)
+  N = render(Binary, N) # make binary
+  
+  # now we calcualte relevant 'summary statistics'
+  gen = SpeciesInteractionNetworks.generality(N)
+  ind_maxgen = findmax(collect(values(gen)))[2] # find a species with maximal generality
+  basal = findall(x -> x == 0.0, collect(values(gen))) # find species with generality of zero
+  
+  vul = SpeciesInteractionNetworks.vulnerability(N)
+  top = findall(x -> x == 0.0, collect(values(vul))) # find species with vulnerability of zero
+  
+  D = Dict{Symbol, Any}()
+    D[:id] = NZ_webs[i].id
+    D[:richness] = richness(N)
+    D[:links] = links(N)
+    D[:connectance] = connectance(N)
+    D[:complexity] = complexity(N)
+    D[:distance] = distancetobase(N, collect(keys(gen))[ind_maxgen])
+    D[:basal] = length(basal)
+    D[:top] = length(top)
+    D[:S1] = length(findmotif(motifs(Unipartite, 3)[1], N))
+    D[:S2] = length(findmotif(motifs(Unipartite, 3)[2], N))
+    D[:S4] = length(findmotif(motifs(Unipartite, 3)[4], N))
+    D[:S5] = length(findmotif(motifs(Unipartite, 3)[5], N))
+    push!(nz_topology, D)
+end
+
+
+## Write file
+CSV.write("data/processed/nz_summary.csv", nz_topology)
