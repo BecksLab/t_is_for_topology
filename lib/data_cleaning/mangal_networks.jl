@@ -1,9 +1,3 @@
-using CSV
-using DataFrames
-using JLD2
-using Mangal
-using ProgressMeter
-using SpeciesInteractionNetworks
 
 network_count = 20
 mangal_networks = Mangal.networks("type" => "herbivory", "count" => network_count)
@@ -63,7 +57,7 @@ networks = Any[]
 end
 
 ## Write networks as object
-save_object("data/raw/mangal_networks.jlds", networks)
+save_object("data/raw/mangal/mangal_networks.jlds", networks)
 
 ## Write file
 CSV.write("data/raw/mangal/mangal_networks.csv", mangal_networks)
