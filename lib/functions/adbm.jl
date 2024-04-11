@@ -1,17 +1,45 @@
 """
 adbm_parameters
 """
-function adbm_parameters(parameters, e, a_adbm, ai, aj, b, h_adbm, hi, hj, n, ni, Hmethod, Nmethod)
-    parameters[:e] = e
-    parameters[:a_adbm] = a_adbm
-    parameters[:ai] = ai
-    parameters[:aj] = aj
-    parameters[:b] = b
-    parameters[:h_adbm] = h_adbm
-    parameters[:hi] = hi
-    parameters[:hj] = hj
-    parameters[:n] = n
-    parameters[:ni] = ni
+function adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
+                        bodymass::Vector{Float64}; 
+                        e::Float64 = 1.0, 
+                        a_adbm::Float64 = 0.0189, 
+                        ai::Float64 = -0.491, 
+                        aj::Float64 = -0.465, 
+                        b::Float64 = 0.401, 
+                        h_adbm::Float64 = 1.0, 
+                        hi::Float64 = 1.0, 
+                        hj::Float64 = 1.0, 
+                        n::Float64 = 1.0, 
+                        ni::Float64 = 0.75, 
+                        Hmethod::Symbol = :ratio, 
+                        Nmethod::Symbol = :original)
+
+                        
+    A = zeros(Int64, (richness(N),richness(N)))
+    for i in axes(A, 1)
+      for j in axes(A, 2)
+        if N.edges[i,j] == true
+          A[i,j] = 1
+        end
+      end
+    end
+
+    parameters = Dict{Symbol,Any}(
+      :e          => e,
+      :a_adbm     => a_adbm,
+      :ai         => ai,
+      :aj         => aj,
+      :b          => b,
+      :h_adbm     => h_adbm,
+      :hi         => hi,
+      :hj         => hj,
+      :n          => n,
+      :ni         => ni,
+      :A          => A
+      )
+    
     #check Hmethod
     if Hmethod ∈ [:ratio, :power]
       parameters[:Hmethod] = Hmethod
@@ -27,6 +55,15 @@ function adbm_parameters(parameters, e, a_adbm, ai, aj, b, h_adbm, hi, hj, n, ni
     # add empty cost matrix
     S = size(parameters[:A],2)
     parameters[:costMat] = ones(Float64,(S,S))
+
+    # Identify producers
+    is_producer = vec(sum(A, dims = 2) .== 0)
+    parameters[:is_producer] = is_producer 
+
+    # add bodymass
+    parameters[:bodymass] = bodymass
+
+    return parameters
 end
 
 

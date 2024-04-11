@@ -101,7 +101,7 @@ end
 # import mangal networks
 nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
 
-model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral"]
+model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral", "adbm"]
 
 @showprogress for _ in 1:n_reps
     for i in eachindex(nz_networks)
@@ -126,8 +126,11 @@ model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral"]
                 # ❗ TODO
                 nchains = 2,
                 nsteps = 20)
-            else val == "neutral"
+            elseif  val == "neutral"
                 neutral_model(abun, links(network))
+            else  val == "adbm"
+                parameters = adbm_parameters(network, mass)
+                adbmmodel(richness(network), parameters, abun)
             end
         
             N = simplify(N)
