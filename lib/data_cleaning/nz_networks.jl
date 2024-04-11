@@ -33,8 +33,12 @@ function abundance_data_NZ(fw_name)
                     drop=[1]))
                     
   N_NZ = Matrix{Bool}(N_df)
+  taxa_N = names(N_df)
+  N_NZ = N_NZ[in(abund_taxa).(taxa_N), in(abund_taxa).(taxa_N)]
+  sp_names = taxa_N[in(abund_taxa).(taxa_N)]
+
   edges = Binary(N_NZ)
-  nodes =  Unipartite(names(N_df))
+  nodes =  Unipartite(sp_names)
   N = SpeciesInteractionNetwork(nodes, edges)
 
   # simplify network and get species names
