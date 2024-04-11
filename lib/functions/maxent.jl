@@ -1,5 +1,6 @@
 """
-maxentmodel(species::Int64, connectance::Float64; nchains::Int64 = 4, nsteps::Int64 = 2000)
+maxentmodel(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary}; 
+        nchains::Int64 = 4, nsteps::Int64 = 2000)
 
     Returns the adjacency matrix of maximum SVD-entropy constrained 
     by the joint degree sequence of a networks using a simulating 

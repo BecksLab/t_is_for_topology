@@ -1,5 +1,5 @@
 """
-    nestedhierarchymodel(species::Int64, connectance::Int64)
+    nestedhierarchymodel(S::Int64, L::Int64)
 
     Return a network where resources are assigned to consumers according
     to the nested hierarchy model for the specified number of species and

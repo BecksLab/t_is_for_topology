@@ -1,5 +1,5 @@
 """
-neutral_model(abundance::Vector, L::Int64)
+neutralmodel(abundance::Vector, L::Int64)
     
     Return a network where links are assigned based on the abundance
     of species.
@@ -15,7 +15,7 @@ neutral_model(abundance::Vector, L::Int64)
     Their Structure with Minimal Biases.” PLOS Computational Biology 19 (9): 
     e1011458. https://doi.org/10.1371/journal.pcbi.1011458.
 """
-function neutral_model(abundance::Vector, L::Int64)
+function neutralmodel(abundance::Vector, L::Int64)
     rel_abun = abundance ./ sum(abundance) # vector of relative abundances
     abun_mat = rel_abun * rel_abun' # neutral abundance matrix (proportional to adjacency matrix)
 

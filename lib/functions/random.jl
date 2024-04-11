@@ -1,26 +1,26 @@
 """
-randommodel(species::Int64, connectance::Float64)
+randommodel(S::Int64, L::Int64)
 
-Return a network of randomly assembled interactions according to
-the cascade model.
+    Return a network of randomly assembled interactions according to
+    the cascade model.
 
-This is essentially a wrapper for the `erdos_renyi` function from
-Graphs.jl and just packes it into a SpeciesInteraction network
+    This is essentially a wrapper for the `erdos_renyi` function from
+    Graphs.jl and just packes it into a SpeciesInteraction network
 
-#### References
+    #### References
 
-Erdős, Paul, and Alfréd Rényi. 1959. “On Random Graphs I.” 
-Publicationes Mathematicae. https://doi.org/10.5486/PMD.1959.6.3-4.12.
+    Erdős, Paul, and Alfréd Rényi. 1959. “On Random Graphs I.” 
+    Publicationes Mathematicae. https://doi.org/10.5486/PMD.1959.6.3-4.12.
 
-Graphs.jl TODO
+    Graphs.jl TODO
 """
-function randommodel(species::Int64, links::Int64)
+function randommodel(S::Int64, L::Int64)
     
-    N = erdos_renyi(species, links)
+    N = erdos_renyi(S, L)
 
     adj = Graphs.SimpleGraphs.adj(N)
 
-    edges = zeros(Bool, (species, species))
+    edges = zeros(Bool, (S, S))
 
     for i in eachindex(adj)
         for j in eachindex(adj[i])

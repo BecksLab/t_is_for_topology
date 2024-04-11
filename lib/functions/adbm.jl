@@ -1,5 +1,9 @@
 """
-adbm_parameters
+  adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
+    bodymass::Vector{Float64};...)
+
+  returns the parameters needed for the adbm model. Defaults to the values specified
+  in BioEnergeticFoodWebs.jl.
 """
 function adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
                         bodymass::Vector{Float64}; 
@@ -68,10 +72,10 @@ end
 
 
 """
-_get_adbm_terms
+  _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
 
-This function takes the parameters for the ADBM model and returns
-the final terms used to determine feeding patterns. It is used internally by  adbmmodel().
+  This function takes the parameters for the ADBM model and returns
+  the final terms used to determine feeding patterns. It is used internally by  adbmmodel().
 """
 function _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
   E = parameters[:e] .* parameters[:bodymass]
@@ -108,10 +112,11 @@ function _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector
 end
 
 """
-_get_feeding_links
+  _get_feeding_links(S::Int64,E::Vector{Float64}, λ::Array{Float64},
+    H::Array{Float64},biomass::Vector{Float64},j)
 
-This function takes the terms calculated by _get_adbm_terms() and uses them to determine the feeding
-links of species j. Used internally by adbmmodel().
+  This function takes the terms calculated by _get_adbm_terms() and uses them to 
+  determine the feeding links of species j. Used internally by adbmmodel().
 """
 function _get_feeding_links(S::Int64,E::Vector{Float64}, λ::Array{Float64},
    H::Array{Float64},biomass::Vector{Float64},j)
@@ -148,18 +153,21 @@ end
 
 
 """
-adbmmodel
+adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
 
-This function returns the food web based on the ADBM model of Petchey et al. 2008.
-The function takes the paramteres created by rewire_parameters() and uses 
-getADBM_Terms() and getFeedingLinks() to detemine the web structure. This function
-is called using the callback to include rewiring into biomass simulations.
+  This function returns the food web based on the ADBM model of Petchey et al. 2008.
+  The function takes the paramteres created by adbm_parameters and uses 
+  _get_adbm_terms and _get_feeding_links to detemine the web structure.
 
-#### References
+  Note this (and all internal) functions has been ported from the 
+  BioEnergeticFoodWebs.jl source code and has been (minimally) modified for the 
+  purpose of this project.
 
-Petchey, Owen L., Andrew P. Beckerman, Jens O. Riede, and Philip H. Warren.
-2008. “Size, Foraging, and Food Web Structure.” Proceedings of the National
-Academy of Sciences 105 (11): 4191–96. https://doi.org/10.1073/pnas.0710672105.
+  #### References
+
+  Petchey, Owen L., Andrew P. Beckerman, Jens O. Riede, and Philip H. Warren.
+  2008. “Size, Foraging, and Food Web Structure.” Proceedings of the National
+  Academy of Sciences 105 (11): 4191–96. https://doi.org/10.1073/pnas.0710672105.
 
 """
 function adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})

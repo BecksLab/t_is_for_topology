@@ -125,7 +125,7 @@ nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
                 nchains = 2,
                 nsteps = 20)
             elseif  val == "neutral"
-                neutral_model(abun, links(network))
+                neutralmodel(abun, links(network))
             else  val == "adbm"
                 parameters = adbm_parameters(network, mass)
                 N = adbmmodel(richness(network), parameters, abun)
