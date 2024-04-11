@@ -162,13 +162,13 @@ Petchey, Owen L., Andrew P. Beckerman, Jens O. Riede, and Philip H. Warren.
 Academy of Sciences 105 (11): 4191–96. https://doi.org/10.1073/pnas.0710672105.
 
 """
-function adbmmodel(species::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
-  adbmMAT = zeros(Bool,(species,species))
+function adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
+  adbmMAT = zeros(Bool,(S,S))
   adbmTerms = _get_adbm_terms(S,parameters,biomass)
   E = adbmTerms[:E]
   λ = adbmTerms[:λ]
   H = adbmTerms[:H]
-  for j = 1:species
+  for j = 1:S
     if !parameters[:is_producer][j]
       if biomass[j] > 0.0
         feeding = _get_feeding_links(S,E,λ,H,biomass,j)

@@ -41,7 +41,7 @@ topology  = DataFrame(
 
 ## Structural networks
 
-model_names = ["random", "niche", "cascade", "hierarchy", "maxent"]
+model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral", "adbm"]
 n_reps = 40 #number of reps for each model for each network
 
 @showprogress for _ in 1:n_reps
@@ -101,8 +101,6 @@ end
 # import mangal networks
 nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
 
-model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral", "adbm"]
-
 @showprogress for _ in 1:n_reps
     for i in eachindex(nz_networks)
     
@@ -130,11 +128,13 @@ model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral", "
                 neutral_model(abun, links(network))
             else  val == "adbm"
                 parameters = adbm_parameters(network, mass)
-                adbmmodel(richness(network), parameters, abun)
+                N = adbmmodel(richness(network), parameters, abun)
             end
         
             N = simplify(N)
             N = render(Binary, N)
+
+            if richness(N) > 0
         
             gen = SpeciesInteractionNetworks.generality(N)
             ind_maxgen = findmax(collect(values(gen)))[2]
@@ -156,6 +156,7 @@ model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral", "
                 D[:S4_mod] = length(findmotif(motifs(Unipartite, 3)[4], N))
                 D[:S5_mod] = length(findmotif(motifs(Unipartite, 3)[5], N))
                 push!(topology, D)
+            end
         end
     end
 end
