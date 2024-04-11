@@ -1,0 +1,57 @@
+id,species_name,category,body_mass,numerical_abundance,trophic_species,trophic_height
+1,Nostoc sp.,P,7.97e-13,2.00e6,1,1
+2,Arthrodesmus sp.,P,1.52e-12,4.90e7,2,1
+3,Asterionella formosa,P,1.12e-12,5.00e6, NA, NA
+4,Cryptomonas sp.1,P,2.03e-13,6.40e7,3,1
+5,Cryptomonas sp.2,P,1.51e-12,2.80e7,4,1
+6,Chroococcus dispersus,P,2.39e-13,2.00e7,3,1
+7,Closteriopsis longissimus,P,2.37e-13,1.00e8,5,1
+8,Chrysosphaerella longispina,P,8.31e-10,4.00e6, NA, NA
+9,Dinobryon bavaricum,P,2.44e-12,3.00e7,6,1
+10,Dinobryon cylindricum,P,1.57e-12,3.00e6,1,1
+11,Dactylococcopsis fascicularis,P,1.32e-13,4.60e7,1,1
+12,Diceras sp.,P,1.53e-13,1.40e7, NA, NA
+13,Dictyosphaerium pulchellum,P,5.07e-13,1.30e7,4,1
+14,Dinobryon sertularia,P,1.52e-11,2.00e6,7,1
+15,Dinobryon sociale,P,6.41e-13,2.80e7,4,1
+16,Glenodinium quadridens,P,7.54e-12,6.70e7,8,1
+17,Microcystis aeruginosa,P,1.62e-11,1.30e7,6,1
+18,Mallomonas sp.1,P,1.03e-12,1.90e7,7,1
+19,Mallomonas sp.2,P,1.41e-12,2.27e7,2,1
+20,Unclassified flagellates,P,3.46e-13,1.88e9,3,1
+21,Peridinium limbatum,P,6.46e-11,1.70e7,6,1
+22,Peridinium cinctum,P,4.06e-11,8.00e6,7,1
+23,Peridinium pulsillum,P,1.58e-12,1.23e8,4,1
+24,Peridinium wisconsinense,P,3.56e-11,1.40e7,6,1
+25,Chromulina sp.,P,3.03e-14,1.49e8,3,1
+26,Rhizosolenia sp.,P,6.86e-13,5.60e7, NA, NA
+27,Selenastrum minutum,P,2.72e-13,2.00e8,3,1
+28,Spinocosmarium sp.,P,3.71e-12,2.00e6, NA, NA
+29,Staurastrum sp.,P,4.30e-12,9.00e6, NA, NA
+30,Synedra sp.,P,9.18e-11,1.00e6,6,1
+31,Trachelomonas sp.,P,1.75e-13,2.22e8,3,1
+32,Ascomorpha eucadis,Z,1.40e-10,2.30e3,9,2
+33,Synchaeta sp.,Z,9.50e-10,5.00e3,9,2
+34,Bosmina longirostris,Z,1.55e-9,2.59e4,10,2
+35,Conochilus solitary,Z,3.50e-11,6.00e3,11,2
+36,Cyclops varians rubellus,Z,2.04e-8,1.30e3,12,3
+37,Diaphanosoma leuchtenbergianum,Z,2.24e-9,2.40e3,13,2
+38,Daphnia pulex,Z,5.80e-8,3.00e2,14,2.42
+39,Filinia longispina,Z,1.80e-10,4.00e2,15,2
+40,Conochiloides dossuarius,Z,1.60e-10,3.91e4,11,2
+41,Gastropus stylifer,Z,1.35e-10,5.90e3,15,2
+42,Holopedium gibberum,Z,8.75e-8,1.00e2,16,2
+43,Kellicottia sp.,Z,2.00e-11,4.26e4,15,2
+44,Keratella cochlearis,Z,1.00e-11,7.11e4,9,2
+45,Keratella testudo,Z,1.00e-11,1.00e3,15,2
+46,Leptodiaptomus siciloides,Z,8.80e-9,4.00e2,17,2
+47,Orthocyclops modestus,Z,2.29e-8,3.80e3,18,4
+48,Ploesoma sp.,Z,1.05e-10,9.30e3,15,2
+49,Polyarthra vulgaris,Z,4.65e-10,6.26e4,15,2
+50,Trichocerca multicrinis,Z,2.50e-10,7.80e3,15,2
+51,Trichocerca cylindrica,Z,3.80e-10,1.36e4,15,2
+52,Tropocyclops prasinus,Z,6.85e-9,8.20e3,12,3.5
+53,Chaoborus punctipennis,Z,3.00e-7,2.00e3,19,4.40
+54,Phoxinus eos,F,1.01e-3,1.97e0,20,4.97
+55,Phoxinus neogaeus,F,1.17e-3,1.33e-1,20,4.97
+56,Umbra limi,F,1.29e-3,1.32e-1,21,5.64

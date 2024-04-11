@@ -1,0 +1,58 @@
+id,species_name,category,body_mass,numerical_abundance,trophic_species,trophic_height
+1,Anabaena circinalis,P,1.91e-13,6.00e6, NA, NA
+2,Ankyra judayi,P,1.53e-13,1.30e7,1,1
+3,Cryptomonas sp.1,P,2.85e-13,3.30e7,2,1
+4,Cryptomonas sp.3,P,6.72e-13,1.80e7,3,1
+5,Cryptomonas sp.4,P,1.64e-12,2.80e7,3,1
+6,Chroococcus dispersus,P,2.39e-13,5.00e6,2,1
+7,Chroococcus limneticus,P,1.31e-12,1.60e7,2,1
+8,Cosmarium sp.,P,3.71e-12,1.00e6,3,1
+9,Closteriopsis longissimus,P,1.98e-13,1.00e6,4,1
+10,Chrysosphaerella longispina,P,4.40e-11,1.00e6, NA, NA
+11,Dinobryon bavaricum,P,5.29e-12,8.00e6,5,1
+12,Dinobryon cylindricum,P,4.48e-12,6.70e7,5,1
+13,Dactylococcopsis fascicularis,P,1.32e-13,1.00e6,3,1
+14,Diceras sp.,P,1.53e-13,1.00e6, NA, NA
+15,Dictyosphaerium pulchellum,P,4.07e-13,1.00e6,3,1
+16,Dinobryon sertularia,P,6.28e-12,2.00e6,3,1
+17,Sphaerocystis schroeteri,P,1.08e-11,2.00e6,3,1
+18,Gloeocystis sp.,P,9.46e-11,5.00e6,5,1
+19,Glenodinium pulvisculus,P,5.20e-12,8.00e6,3,1
+20,Microcystis aeruginosa,P,1.62e-11,2.00e6,5,1
+21,Mallomonas-spiny sp.1,P,2.22e-12,2.10e7, NA, NA
+22,Mallomonas-spiny sp.2,P,2.22e-12,2.60e7, NA, NA
+23,unclassified microflagellates,P,1.02e-13,1.26e8,2,1
+24,Oocystis sp.1,P,3.86e-12,2.40e7,3,1
+25,Oocystis sp.2,P,6.32e-12,3.00e6,3,1
+26,Oscillatoria sp.,P,1.61e-12,6.00e6,6,1
+27,Peridinium limbatum,P,6.46e-11,1.00e6,5,1
+28,Peridinium pulsillum,P,1.58e-12,1.00e6,3,1
+29,Quadrigula lacustris,P,7.13e-12,1.03e8,5,1
+30,Quadrigula sp.2,P,9.48e-13,1.10e7,5,1
+31,Chromulina sp.,P,3.03e-14,2.09e8,2,1
+32,Schroederia setigera,P,6.37e-13,8.90e7,3,1
+33,Selenastrum minutum,P,2.72e-13,1.10e7,2,1
+34,Synedra sp.,P,3.62e-13,2.00e6,5,1
+35,Synura sp.,P,5.07e-12,1.00e6, NA, NA
+36,Ascomorpha eucadis,Z,4.00e-10,3.50e3,7,2
+37,Conochilus colonial,Z,1.46e-8,7.00e2,8,2
+38,Conochiloides dossuarius,Z,1.60e-10,3.00e2,9,2
+39,Cyclops varians rubellus,Z,2.44e-8,4.00e2,10,3
+40,Diaptomus oregonensis,Z,1.44e-8,1.00e2,11,2
+41,Daphnia pulex,Z,4.56e-8,2.60e3,12,2.39
+42,Daphnia rosea,Z,1.36e-8,4.00e2,13,2.47
+43,Gastropus hyptopus,Z,1.35e-10,3.00e2,14,2
+44,Gastropus stylifer,Z,1.00e-10,1.90e3,15,2
+45,Holopedium gibberum,Z,4.89e-8,7.00e2,16,2
+46,Kellicottia bostoniensis,Z,2.00e-11,5.30e3,14,2
+47,Kellicottia longispina,Z,4.50e-11,5.00e2,14,2
+48,Keratella cochlearis,Z,1.00e-11,8.80e3,17,2
+49,Keratella testudo,Z,1.50e-11,1.16e4,14,2
+50,Orthocyclops modestus,Z,3.22e-8,1.00e2,10,3.5
+51,Polyarthra vulgaris,Z,2.60e-10,1.26e4,14,2
+52,Synchaeta sp.,Z,3.70e-10,4.90e3,17,2
+53,Trichocerca cylindrica,Z,5.90e-10,3.70e3,14,2
+54,Trichocerca multicrinis,Z,7.00e-11,7.00e2,14,2
+55,Tropocyclops prasinus,Z,8.95e-9,2.00e2,18,4.02
+56,Chaoborus punctipennis,Z,2.10e-7,2.00e3,19,4.39
+57,Micropterus salmoides,F,1.95e-1,3.40e-2,20,5.24
