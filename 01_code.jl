@@ -152,6 +152,7 @@ model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral"]
                 D[:S2_mod] = length(findmotif(motifs(Unipartite, 3)[2], N))
                 D[:S4_mod] = length(findmotif(motifs(Unipartite, 3)[4], N))
                 D[:S5_mod] = length(findmotif(motifs(Unipartite, 3)[5], N))
+                push!(topology, D)
         end
     end
 end
