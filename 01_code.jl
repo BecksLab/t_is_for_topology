@@ -12,15 +12,15 @@ using SpeciesInteractionNetworks
 using StatsBase
 
 # Load the functions we need from the lib folder
-include("lib/adbm.jl")
-include("lib/cascade.jl")
-include("lib/maxent.jl")
-include("lib/nestedhierarchy.jl")
-include("lib/random.jl")
+include("lib/functions/adbm.jl")
+include("lib/functions/cascade.jl")
+include("lib/functions/maxent.jl")
+include("lib/functions/nestedhierarchy.jl")
+include("lib/functions/random.jl")
 
 # import mangal networks
-mangal_networks = load_object("data/mangal_networks.jlds")
-mangal_summary = CSV.read("data/mangal_summary.csv", DataFrame)
+mangal_networks = load_object("data/raw/mangal_networks.jlds")
+mangal_summary = CSV.read("data/raw/mangal_summary.csv", DataFrame)
 
 # create df for the outputs to be stored (long format)
 
@@ -99,4 +99,4 @@ end
 
 ## ADBM networks
 
-CSV.write("data/topology_summary.csv", topology)
+CSV.write("data/processed/topology_summary.csv", topology)

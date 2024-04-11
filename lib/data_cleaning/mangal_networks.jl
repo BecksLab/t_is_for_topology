@@ -63,8 +63,8 @@ networks = Any[]
 end
 
 ## Write networks as object
-save_object("data/mangal_networks.jlds", networks)
+save_object("data/raw/mangal_networks.jlds", networks)
 
 ## Write file
-CSV.write("data/mangal_networks.csv", mangal_networks)
-CSV.write("data/mangal_summary.csv", mangal_topology)
+CSV.write("data/raw/mangal/mangal_networks.csv", mangal_networks)
+CSV.write("data/processed/mangal_summary.csv", mangal_topology)
