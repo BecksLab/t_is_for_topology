@@ -170,7 +170,10 @@ adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
   Academy of Sciences 105 (11): 4191–96. https://doi.org/10.1073/pnas.0710672105.
 
 """
-function adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
+function adbmmodel(species_list::Vector{String}, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
+  
+  S = length(species_list)
+
   adbmMAT = zeros(Bool,(S,S))
   adbmTerms = _get_adbm_terms(S,parameters,biomass)
   E = adbmTerms[:E]
@@ -185,6 +188,6 @@ function adbmmodel(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float
     end
   end
   edges = Binary(adbmMAT)
-  nodes = Unipartite(edges)
+  nodes = Unipartite(species_list) # return actual species name metadata
   return SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
 end

@@ -1,8 +1,10 @@
 """
-neutralmodel(abundance::Vector, L::Int64)
+neutralmodel(abundance::Vector, L::Int64, species_list::Vector{String})
     
-    Return a network where links are assigned based on the abundance
-    of species.
+    Return a SpeciesInteractionNetwork where links (L) are assigned based
+    on the abundance of species. Note by providing the species list it is
+    possible to add the species associated with the abundances to the final
+    network metadata
 
     Note this function has been ported from the Banville (2023)
     source code and has been (minimally) modified for the purpose of 
@@ -15,7 +17,7 @@ neutralmodel(abundance::Vector, L::Int64)
     Their Structure with Minimal Biases.” PLOS Computational Biology 19 (9): 
     e1011458. https://doi.org/10.1371/journal.pcbi.1011458.
 """
-function neutralmodel(abundance::Vector, L::Int64)
+function neutralmodel(abundance::Vector, L::Int64, species_list::Vector{String})
     rel_abun = abundance ./ sum(abundance) # vector of relative abundances
     abun_mat = rel_abun * rel_abun' # neutral abundance matrix (proportional to adjacency matrix)
 
@@ -26,10 +28,9 @@ function neutralmodel(abundance::Vector, L::Int64)
     N_sim = zeros(Float64, S, S)
     N_neutral =  zeros(Bool, S, S)
 
-    for i in 1:100
+    
         N_samp = sample(eachindex(abun_mat), Weights(vec(abun_mat)), L, replace=false)
         N_sim[N_samp] .= N_sim[N_samp] .+ 1.0
-    end
 
     thres = sort(vec(N_sim), rev=true)[L] # Lth maximum value
     N_neutral[N_sim .< thres] .= 0.0
@@ -40,6 +41,6 @@ function neutralmodel(abundance::Vector, L::Int64)
 
     # convert to unipartite network 
     edges = Binary(N_neutral)
-    nodes = Unipartite(edges)
+    nodes = Unipartite(species_list) # return actual species name metadata
     return SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
 end

@@ -39,7 +39,7 @@ topology  = DataFrame(
     S5_mod = Float64[]
 );
 
-## Structural networks
+## Mangal networks
 
 model_names = ["random", "niche", "cascade", "hierarchy", "maxent", "neutral", "adbm"]
 n_reps = 40 #number of reps for each model for each network
@@ -96,9 +96,9 @@ n_reps = 40 #number of reps for each model for each network
     end
 end
 
-## Neutral networks
+## New Zealand networks
 
-# import mangal networks
+# import new zealand networks
 nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
 
 @showprogress for _ in 1:n_reps
@@ -125,10 +125,10 @@ nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
                 nchains = 2,
                 nsteps = 20)
             elseif  val == "neutral"
-                neutralmodel(abun, links(network))
+                neutralmodel(abun, links(network), species(network))
             else  val == "adbm"
                 parameters = adbm_parameters(network, mass)
-                N = adbmmodel(richness(network), parameters, abun)
+                N = adbmmodel(species(network), parameters, abun)
             end
         
             N = simplify(N)
