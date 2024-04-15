@@ -2,8 +2,9 @@
   adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
     bodymass::Vector{Float64};...)
 
-  returns the parameters needed for the adbm model. Defaults to the values specified
-  in BioEnergeticFoodWebs.jl.
+  returns the parameters needed for the adbm model. Defaults to the values
+  specified in BioEnergeticFoodWebs.jl.
+
 """
 function adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
                         bodymass::Vector{Float64}; 
@@ -75,7 +76,8 @@ end
   _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
 
   This function takes the parameters for the ADBM model and returns
-  the final terms used to determine feeding patterns. It is used internally by  adbmmodel().
+  the final terms used to determine feeding patterns. It is used internally by adbmmodel().
+
 """
 function _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
   E = parameters[:e] .* parameters[:bodymass]
@@ -117,8 +119,9 @@ end
 
   This function takes the terms calculated by _get_adbm_terms() and uses them to 
   determine the feeding links of species j. Used internally by adbmmodel().
+
 """
-function _get_feeding_links(S::Int64,E::Vector{Float64}, λ::Array{Float64},
+function _get_feeding_links(E::Vector{Float64}, λ::Array{Float64},
    H::Array{Float64},biomass::Vector{Float64},j)
 
   profit = E ./ H[j,:]
@@ -182,7 +185,7 @@ function adbmmodel(species_list::Vector{String}, parameters::Dict{Symbol,Any}, b
   for j = 1:S
     if !parameters[:is_producer][j]
       if biomass[j] > 0.0
-        feeding = _get_feeding_links(S,E,λ,H,biomass,j)
+        feeding = _get_feeding_links(E,λ,H,biomass,j)
         adbmMAT[j,feeding] .= 1
       end
     end
