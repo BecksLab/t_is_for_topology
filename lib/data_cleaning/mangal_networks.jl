@@ -27,31 +27,25 @@ networks = Any[]
     
     if richness(N) <= 200 # remove large networks because they make things slow
         
-        push!(networks, N) # push netwrork 'as is'
+        push!(networks, N) # push network 'as is'
 
         N = render(Binary, N) # make binary
 
-        # now we calcualte relevant 'summary statistics'
-        gen = SpeciesInteractionNetworks.generality(N)
-        ind_maxgen = findmax(collect(values(gen)))[2] # find a species with maximal generality
-        basal = findall(x -> x == 0.0, collect(values(gen))) # find species with generality of zero
-    
-        vul = SpeciesInteractionNetworks.vulnerability(N)
-        top = findall(x -> x == 0.0, collect(values(vul))) # find species with vulnerability of zero
-    
+        d = _network_summary(N)
+
         D = Dict{Symbol, Any}()
             D[:id] = mangal_networks[i].id
-            D[:richness] = richness(N)
-            D[:links] = links(N)
-            D[:connectance] = connectance(N)
-            D[:complexity] = complexity(N)
-            D[:distance] = distancetobase(N, collect(keys(gen))[ind_maxgen])
-            D[:basal] = length(basal)
-            D[:top] = length(top)
-            D[:S1] = length(findmotif(motifs(Unipartite, 3)[1], N))
-            D[:S2] = length(findmotif(motifs(Unipartite, 3)[2], N))
-            D[:S4] = length(findmotif(motifs(Unipartite, 3)[4], N))
-            D[:S5] = length(findmotif(motifs(Unipartite, 3)[5], N))
+            D[:richness] = d[:richness]
+            D[:links] = d[:links]
+            D[:connectance] = d[:connectance]
+            D[:complexity] = d[:complexity]
+            D[:distance] = d[:distance]
+            D[:basal] = d[:basal]
+            D[:top] = d[:top]
+            D[:S1] = d[:S1]
+            D[:S2] = d[:S2]
+            D[:S4] = d[:S4]
+            D[:S5] = d[:S5]
         push!(mangal_topology, D)
     end
 end

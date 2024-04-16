@@ -18,7 +18,7 @@ mutable struct NZ_foodweb
 end
 
 """
-nz_data_clean(fw_name::String) 
+abundance_data_NZ(fw_name::String) 
 
   Returns the density (no/m2), biomass, and SpeciesInteractionNetwork of all species in
   the simplified food web with abundance data for the New Zealand dataset
@@ -33,10 +33,6 @@ nz_data_clean(fw_name::String)
   “What Constrains Food Webs? A Maximum Entropy Framework for Predicting 
   Their Structure with Minimal Biases.” PLOS Computational Biology 19 (9): 
   e1011458. https://doi.org/10.1371/journal.pcbi.1011458. 
-
-  Pomeranz, Justin P. F., Ross M. Thompson, Timothée Poisot, and Jon S. Harding. 2019.
-  “Inferring Predator–Prey Interactions in Food Webs.” Methods in Ecology and Evolution
-  10 (3): 356–67. https://doi.org/10.1111/2041-210X.13125.
 """
 function abundance_data_NZ(fw_name::String)
 
@@ -70,7 +66,7 @@ function abundance_data_NZ(fw_name::String)
 end
 
 # get the abundance data of all food webs in New Zealand
-NZ_webs = nz_data_clean.(fw_names)
+NZ_webs = abundance_data_NZ.(fw_names)
 
 ## Write networks as object
 save_object("data/raw/new_zealand/nz_networks.jlds", NZ_webs)
@@ -98,27 +94,21 @@ nz_topology = DataFrame(
   N = simplify(NZ_webs[i].network)
   N = render(Binary, N) # make binary
   
-  # now we calcualte relevant 'summary statistics'
-  gen = SpeciesInteractionNetworks.generality(N)
-  ind_maxgen = findmax(collect(values(gen)))[2] # find a species with maximal generality
-  basal = findall(x -> x == 0.0, collect(values(gen))) # find species with generality of zero
-  
-  vul = SpeciesInteractionNetworks.vulnerability(N)
-  top = findall(x -> x == 0.0, collect(values(vul))) # find species with vulnerability of zero
-  
-  D = Dict{Symbol, Any}()
-    D[:id] = NZ_webs[i].id
-    D[:richness] = richness(N)
-    D[:links] = links(N)
-    D[:connectance] = connectance(N)
-    D[:complexity] = complexity(N)
-    D[:distance] = distancetobase(N, collect(keys(gen))[ind_maxgen])
-    D[:basal] = length(basal)
-    D[:top] = length(top)
-    D[:S1] = length(findmotif(motifs(Unipartite, 3)[1], N))
-    D[:S2] = length(findmotif(motifs(Unipartite, 3)[2], N))
-    D[:S4] = length(findmotif(motifs(Unipartite, 3)[4], N))
-    D[:S5] = length(findmotif(motifs(Unipartite, 3)[5], N))
+  d = _network_summary(N)
+
+    D = Dict{Symbol, Any}()
+        D[:id] = NZ_webs[i].id
+        D[:richness] = d[:richness]
+        D[:links] = d[:links]
+        D[:connectance] = d[:connectance]
+        D[:complexity] = d[:complexity]
+        D[:distance] = d[:distance]
+        D[:basal] = d[:basal]
+        D[:top] = d[:top]
+        D[:S1] = d[:S1]
+        D[:S2] = d[:S2]
+        D[:S4] = d[:S4]
+        D[:S5] = d[:S5]
     push!(nz_topology, D)
 end
 
