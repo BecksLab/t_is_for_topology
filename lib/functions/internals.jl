@@ -70,13 +70,13 @@ function model_summary(
         )
     end
     if model_name == "adbm" && length(abundance) != richness(network)
-        error("Invalid length for abundance -- must be length $richness(network)")
+        error("Invalid length for abundance -- must be length $(richness(network))")
     end
     if model_name == "neutral" && length(abundance) != richness(network)
-        error("Invalid length for abundance -- must be length $richness(network)")
+        error("Invalid length for abundance -- must be length $(richness(network))")
     end
     if model_name == "adbm" && length(mass) != richness(network)
-        error("Invalid length for mass -- must be length $richness(network)")
+        error("Invalid length for mass -- must be length $(richness(network))")
     end
 
     # generate network based on specified model
