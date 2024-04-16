@@ -9,7 +9,7 @@ _get_matrix(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary})
 function _get_matrix(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary})
 
     species = richness(N)
-    n = zeros(Bool, (species, species))
+    n = zeros(Int64, (species, species))
     for i in axes(n, 1)
         for j in axes(n, 2)
             if N.edges[i,j] == true
