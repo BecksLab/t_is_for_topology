@@ -15,7 +15,7 @@ randommodel(S::Int64, L::Int64)
     Graphs.jl TODO
 """
 function randommodel(S::Int64, L::Int64)
-    
+
     N = erdos_renyi(S, L)
 
     adj = Graphs.SimpleGraphs.adj(N)
@@ -24,11 +24,11 @@ function randommodel(S::Int64, L::Int64)
 
     for i in eachindex(adj)
         for j in eachindex(adj[i])
-            edges[i,adj[i][j]] = 1
+            edges[i, adj[i][j]] = 1
         end
     end
 
     edges = Binary(edges)
-    nodes =  Unipartite(edges)
+    nodes = Unipartite(edges)
     return SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
-end 
+end

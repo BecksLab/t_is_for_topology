@@ -25,7 +25,7 @@ mangal_summary = CSV.read("data/processed/mangal_summary.csv", DataFrame)
 
 # create df for the outputs to be stored (long format)
 
-topology  = DataFrame(
+topology = DataFrame(
     id = Any[],
     model = String[],
     connectance_mod = Float64[],
@@ -36,7 +36,7 @@ topology  = DataFrame(
     S1_mod = Float64[],
     S2_mod = Float64[],
     S4_mod = Float64[],
-    S5_mod = Float64[]
+    S5_mod = Float64[],
 );
 
 ## Mangal networks
@@ -44,16 +44,16 @@ topology  = DataFrame(
 model_names = ["random", "niche", "cascade", "maxent"]
 n_reps = 40 #number of reps for each model for each network
 
-@showprogress for _ in 1:n_reps
+@showprogress for _ = 1:n_reps
     for i in eachindex(mangal_networks)
-        
+
         network = render(Binary, mangal_networks[i])
-        abundance = [0.0,0.0] #dummy variable
-        mass = [0.0,0.0] #dummy variable
+        abundance = [0.0, 0.0] #dummy variable
+        mass = [0.0, 0.0] #dummy variable
         id = mangal_summary.id[i]
-        
-        for (j,val) in enumerate(model_names)
-            
+
+        for (j, val) in enumerate(model_names)
+
             D = model_summary(network, id, val; abundance, mass)
             push!(topology, D)
 
@@ -67,21 +67,21 @@ end
 nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
 model_names = ["random", "niche", "cascade", "maxent", "neutral", "adbm"]
 
-@showprogress for _ in 1:n_reps
+@showprogress for _ = 1:n_reps
     for i in eachindex(nz_networks)
-    
+
         network = render(Binary, nz_networks[i].network)
         abundance = nz_networks[i].abundance
         mass = nz_networks[i].mass
         id = nz_networks[i].id
 
-        for (j,val) in enumerate(model_names)
-          
+        for (j, val) in enumerate(model_names)
+
             D = model_summary(network, id, val; abundance, mass)
             if typeof(D) != Nothing
                 push!(topology, D)
             end
-            
+
         end
     end
 end

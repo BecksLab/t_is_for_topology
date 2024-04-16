@@ -17,35 +17,35 @@ mangal_topology = DataFrame(
     S2 = Float64[],
     S4 = Float64[],
     S5 = Float64[],
-); 
+);
 
 # make object to store each network so we can import it later
 networks = Any[]
 
 @showprogress for i in eachindex(mangal_networks)
     N = simplify(mangalnetwork(mangal_networks[i].id))
-    
+
     if richness(N) <= 200 # remove large networks because they make things slow
-        
+
         push!(networks, N) # push network 'as is'
 
         N = render(Binary, N) # make binary
 
         d = _network_summary(N)
 
-        D = Dict{Symbol, Any}()
-            D[:id] = mangal_networks[i].id
-            D[:richness] = d[:richness]
-            D[:links] = d[:links]
-            D[:connectance] = d[:connectance]
-            D[:complexity] = d[:complexity]
-            D[:distance] = d[:distance]
-            D[:basal] = d[:basal]
-            D[:top] = d[:top]
-            D[:S1] = d[:S1]
-            D[:S2] = d[:S2]
-            D[:S4] = d[:S4]
-            D[:S5] = d[:S5]
+        D = Dict{Symbol,Any}()
+        D[:id] = mangal_networks[i].id
+        D[:richness] = d[:richness]
+        D[:links] = d[:links]
+        D[:connectance] = d[:connectance]
+        D[:complexity] = d[:complexity]
+        D[:distance] = d[:distance]
+        D[:basal] = d[:basal]
+        D[:top] = d[:top]
+        D[:S1] = d[:S1]
+        D[:S2] = d[:S2]
+        D[:S4] = d[:S4]
+        D[:S5] = d[:S5]
         push!(mangal_topology, D)
     end
 end

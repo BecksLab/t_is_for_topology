@@ -28,12 +28,12 @@ function cascademodel(S::Int64, Co::Float64)
     edges = zeros(Bool, (S, S))
 
     # For each species randomly asscribe rank e
-    e = Random.sort(rand(S); rev=false)
+    e = Random.sort(rand(S); rev = false)
 
     # Probability for linking two species
-    p = 2*Co*S/(S - 1)
+    p = 2 * Co * S / (S - 1)
 
-    for consumer in  1:S
+    for consumer = 1:S
 
         # Rank for a consumer
         rank = e[consumer]

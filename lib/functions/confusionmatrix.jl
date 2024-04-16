@@ -5,13 +5,13 @@
 include("internals.jl")
 
 struct ConfusionMatrix
-    tp
-    tn
-    fp
-    fn
-    function ConfusionMatrix(a,b,c,d)
-        s = a+b+c+d
-        return new(a/s, b/s, c/s, d/s)
+    tp::Any
+    tn::Any
+    fp::Any
+    fn::Any
+    function ConfusionMatrix(a, b, c, d)
+        s = a + b + c + d
+        return new(a / s, b / s, c / s, d / s)
     end
 end
 
@@ -22,17 +22,19 @@ npv(M::ConfusionMatrix) = M.tn / (M.tn + M.fn)
 fnr(M::ConfusionMatrix) = M.fn / (M.fn + M.tp)
 fpr(M::ConfusionMatrix) = M.fp / (M.fp + M.tn)
 informedness(M::ConfusionMatrix) = tpr(M) + tnr(M) - 1.0
-mcc(M::ConfusionMatrix) = (M.tp*M.tn-M.fp*M.fn)/sqrt((M.tp+M.fp)*(M.tp+M.fn)*(M.tn+M.fp)*(M.tn+M.fn))
+mcc(M::ConfusionMatrix) =
+    (M.tp * M.tn - M.fp * M.fn) /
+    sqrt((M.tp + M.fp) * (M.tp + M.fn) * (M.tn + M.fp) * (M.tn + M.fn))
 
 function ∫(x::Array{T}, y::Array{T}) where {T<:Number}
     S = zero(Float64)
-    for i in 2:length(x)
-        S += (x[i] - x[i - 1]) * (y[i] + y[i - 1]) * 0.5
+    for i = 2:length(x)
+        S += (x[i] - x[i-1]) * (y[i] + y[i-1]) * 0.5
     end
     return .-S
 end
 
-function benchmark(obs, pred; levels=500)
+function benchmark(obs, pred; levels = 500)
     thresholds = LinRange(minimum(pred), maximum(pred), levels)
     M = Vector{ConfusionMatrix}(undef, length(thresholds))
     for (i, τ) in enumerate(thresholds)
@@ -46,5 +48,5 @@ function benchmark(obs, pred; levels=500)
     AUPRC = ∫(tpr.(M), ppv.(M))
     𝑚𝑐𝑐 = findmax(mcc.(M))[1]
     τ = thresholds[last(findmax(informedness.(M)))]
-    return AUPRC, 𝑚𝑐𝑐, τ 
+    return AUPRC, 𝑚𝑐𝑐, τ
 end

@@ -18,16 +18,17 @@ maxentmodel(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary};
     e1011458. https://doi.org/10.1371/journal.pcbi.1011458. 
 """
 function maxentmodel(
-    N::SpeciesInteractionNetwork{<:Partiteness, <:Binary};
+    N::SpeciesInteractionNetwork{<:Partiteness,<:Binary};
     nchains::Int64 = 4,
-    nsteps::Int64 = 2000)
+    nsteps::Int64 = 2000,
+)
 
     # matrix generator object
-    n = zeros(Int64, (richness(N),richness(N)))
+    n = zeros(Int64, (richness(N), richness(N)))
     for i in axes(n, 1)
         for j in axes(n, 2)
-            if N.edges[i,j] == true
-                n[i,j] = 1
+            if N.edges[i, j] == true
+                n[i, j] = 1
             end
         end
     end
@@ -36,44 +37,44 @@ function maxentmodel(
     entropies = zeros(Float64, nsteps, nchains)
     A = []
 
-    for j in 1:nchains
+    for j = 1:nchains
         # generate a new random matrix with the same row and column sums (joint degree sequence) as N
-        edges =  Binary(rand(rmg))
+        edges = Binary(rand(rmg))
         nodes = Unipartite(edges)
         A0 = SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
         A0 = simplify(A0)
         best = complexity(A0)
-        entropies[1,j] = best
+        entropies[1, j] = best
 
         # initial temperature of the simulating annealing algorithm
         T = 0.2
 
         # simulating annealing algorithm
-        for i in 2:nsteps
+        for i = 2:nsteps
             # propose a new constrained random matrix and compute the difference in SVD-entropy 
             A1 = swap!(A0)
             candidate = complexity(A1)
             delta = candidate - best
             # accept if the difference is positive or with a probability p if it's negative
-            if delta > 0 
-                A0 = A1 
+            if delta > 0
+                A0 = A1
                 best = candidate
-            else 
-                p = exp(delta/T)
+            else
+                p = exp(delta / T)
                 P = rand(Uniform(0, 1))
                 if P < p
                     A0 = A1
                     best = candidate
                 end
             end
-            entropies[i,j] = best
+            entropies[i, j] = best
             # update the temperature
             T = T * 0.99
         end
         push!(A, A0)
     end
     # find the network with maximum entropy among all chains
-    imax = findmax(entropies[nsteps,:])[2]
+    imax = findmax(entropies[nsteps, :])[2]
     Amax = (A = A[imax], entropies = entropies)
     return simplify(Amax.A)
 end
