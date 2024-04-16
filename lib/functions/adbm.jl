@@ -1,3 +1,7 @@
+# For implementing the ADBM model
+
+include("internals.jl")
+
 """
   adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
     bodymass::Vector{Float64};...)
@@ -110,7 +114,7 @@ function _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector
 
     adbmTerms = Dict{Symbol,Any}(:E => E, :λ => λ, :H => H)
 
-    return (adbmTerms)
+    return adbmTerms
 end
 
 """
@@ -156,7 +160,7 @@ function _get_feeding_links(
 
     #cumulativeProfit[end] = NaN
     #feeding = profs[(append!([true],cumulativeProfit[1:end-1] .< profitSort[2:end]))]
-    return (feeding)
+    return feeding
 end
 
 

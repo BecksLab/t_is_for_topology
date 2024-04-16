@@ -1,3 +1,7 @@
+using Graphs
+
+include("internals.jl")
+
 """
 randommodel(S::Int64, L::Int64)
 
@@ -20,13 +24,7 @@ function randommodel(S::Int64, L::Int64)
 
     adj = Graphs.SimpleGraphs.adj(N)
 
-    edges = zeros(Bool, (S, S))
-
-    for i in eachindex(adj)
-        for j in eachindex(adj[i])
-            edges[i, adj[i][j]] = 1
-        end
-    end
+    edges = _get_matrix(adj)
 
     edges = Binary(edges)
     nodes = Unipartite(edges)

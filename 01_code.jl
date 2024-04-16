@@ -1,19 +1,18 @@
 using CSV
 using DataFrames
 using Distributions
-using Graphs
 using JLD2
 #using EcologicalNetworks
 using Mangal
 using ProgressMeter
 using Random
-using RandomBooleanMatrices
 using SpeciesInteractionNetworks
 using StatsBase
 
 # Load the functions we need from the lib folder
 include("lib/functions/adbm.jl")
 include("lib/functions/cascade.jl")
+include("lib/functions/internals.jl")
 include("lib/functions/maxent.jl")
 include("lib/functions/nestedhierarchy.jl")
 include("lib/functions/neutral.jl")
@@ -23,7 +22,7 @@ include("lib/functions/random.jl")
 mangal_networks = load_object("data/raw/mangal/mangal_networks.jlds")
 mangal_summary = CSV.read("data/processed/mangal_summary.csv", DataFrame)
 
-# create df for the outputs to be stored (long format)
+# create df for the outputs to be stored
 
 topology = DataFrame(
     id = Any[],
