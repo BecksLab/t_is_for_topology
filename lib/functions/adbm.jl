@@ -2,7 +2,7 @@
   adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
     bodymass::Vector{Float64};...)
 
-  returns the parameters needed for the adbm model. Defaults to the values
+  Returns the parameters needed for the adbm model. Defaults to the values
   specified in BioEnergeticFoodWebs.jl.
 
 """
@@ -22,14 +22,7 @@ function adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
                         Nmethod::Symbol = :original)
 
                         
-    A = zeros(Int64, (richness(N),richness(N)))
-    for i in axes(A, 1)
-      for j in axes(A, 2)
-        if N.edges[i,j] == true
-          A[i,j] = 1
-        end
-      end
-    end
+    A = _get_matrix(N) # matrix from N, needed to determine producers
 
     parameters = Dict{Symbol,Any}(
       :e          => e,
@@ -51,18 +44,20 @@ function adbm_parameters(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary},
     else
       error("Invalid value for Hmethod -- must be :ratio or :power")
     end
+
     # check Nmethod
     if Nmethod ∈ [:original, :biomass]
       parameters[:Nmethod] = Nmethod
     else
       error("Invalid value for Nmethod -- must be :original or :biomass")
     end
+
     # add empty cost matrix
     S = size(parameters[:A],2)
     parameters[:costMat] = ones(Float64,(S,S))
 
-    # Identify producers
-    is_producer = vec(sum(A, dims = 2) .== 0)
+    # Identify producers - based on number of prey
+    is_producer = vec(sum(A, dims = 2) .== 0) 
     parameters[:is_producer] = is_producer 
 
     # add bodymass
@@ -75,8 +70,8 @@ end
 """
   _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
 
-  This function takes the parameters for the ADBM model and returns
-  the final terms used to determine feeding patterns. It is used internally by adbmmodel().
+  This function takes the parameters for the ADBM model and returns the final
+  terms used to determine feeding patterns. It is used internally by adbmmodel().
 
 """
 function _get_adbm_terms(S::Int64, parameters::Dict{Symbol,Any}, biomass::Vector{Float64})
@@ -129,7 +124,7 @@ function _get_feeding_links(E::Vector{Float64}, λ::Array{Float64},
   # This prevents them being included in the profitSort
   profit[vec(biomass .== 0.0)] .= -1.0
 
-  profs = sortperm(profit,rev = true)
+  profs = sortperm(profit,rev = true) # returns the index
 
   λSort = λ[j,profs]
   HSort = H[j,profs]
