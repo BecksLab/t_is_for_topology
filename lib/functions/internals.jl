@@ -102,9 +102,7 @@ function model_summary(network::SpeciesInteractionNetwork{<:Partiteness, <:Binar
     N = render(Binary, N)
 
     if richness(N) > 0
-
     d = _network_summary(N)
-
     D = Dict{Symbol, Any}()
         D[:id] = network_id
         D[:model] = model_name
@@ -117,7 +115,8 @@ function model_summary(network::SpeciesInteractionNetwork{<:Partiteness, <:Binar
         D[:S2_mod] = d[:S2]
         D[:S4_mod] = d[:S4]
         D[:S5_mod] = d[:S5]
+    else
+        D = nothing
     end
-
     return D
 end
