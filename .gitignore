@@ -24,7 +24,7 @@ docs/site/
 Manifest.toml
 
 # vscode
-.vscode/settings.json
+.vscode/*
 
 # MacOS nonsense
 .DS_Store
