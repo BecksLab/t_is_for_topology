@@ -1,7 +1,7 @@
 """
 neutralmodel(abundance::Vector, L::Int64, species_list::Vector{String})
     
-    Return a SpeciesInteractionNetwork where links (L) are assigned based
+    Return a SpeciesInteractionNetwork where links are assigned based
     on the abundance of species. Note by providing the species list it is
     possible to add the species associated with the abundances to the final
     network metadata
