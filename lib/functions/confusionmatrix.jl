@@ -1,6 +1,6 @@
-# Modified from Poisot, Timothée. 2023. “Guidelines for the Prediction of Species 
-# Interactions Through Binary Classification.” Methods in Ecology and Evolution 14 
-# (5): 1333–45. https://doi.org/10.1111/2041-210X.14071.
+# Modified from Poisot, Timothée. 2023. “Guidelines for the Prediction of
+# Species Interactions Through Binary Classification.” Methods in Ecology and
+# Evolution 14 (5): 1333–45. https://doi.org/10.1111/2041-210X.14071.
 
 include("internals.jl")
 

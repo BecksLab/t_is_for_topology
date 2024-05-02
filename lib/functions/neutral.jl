@@ -27,8 +27,8 @@ function neutralmodel(abundance::Vector, L::Int64, species_list::Vector{String})
 
     S = length(abundance) # species richness
 
-    # draw L interactions using the neutral abundance matrix as weights
-    # repeat multiple times and keep the L higher values
+    # draw L interactions using the neutral abundance matrix as weights repeat
+    # multiple times and keep the L higher values
     N_sim = zeros(Float64, S, S)
     N_neutral = zeros(Bool, S, S)
 

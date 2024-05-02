@@ -36,7 +36,8 @@ function maxentmodel(
     A = []
 
     for j = 1:nchains
-        # generate a new random matrix with the same row and column sums (joint degree sequence) as N
+        # generate a new random matrix with the same row and column sums (joint
+        # degree sequence) as N
         edges = Binary(rand(rmg))
         nodes = Unipartite(edges)
         A0 = SpeciesInteractionNetworks.SpeciesInteractionNetwork(nodes, edges)
@@ -49,11 +50,13 @@ function maxentmodel(
 
         # simulating annealing algorithm
         for i = 2:nsteps
-            # propose a new constrained random matrix and compute the difference in SVD-entropy 
+            # propose a new constrained random matrix and compute the difference
+            # in SVD-entropy 
             A1 = swap!(A0)
             candidate = complexity(A1)
             delta = candidate - best
-            # accept if the difference is positive or with a probability p if it's negative
+            # accept if the difference is positive or with a probability p if
+            # it's negative
             if delta > 0
                 A0 = A1
                 best = candidate
