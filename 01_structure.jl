@@ -66,6 +66,11 @@ end
 nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
 model_names = ["random", "niche", "cascade", "maxent", "neutral", "adbm"]
 
+# create df to store predicted networks - we will need these later
+nz_networks_pred = DataFrame(
+    id = Any[],
+    network = Any[]);
+
 @showprogress for _ = 1:n_reps
     for i in eachindex(nz_networks)
 
@@ -74,11 +79,14 @@ model_names = ["random", "niche", "cascade", "maxent", "neutral", "adbm"]
         mass = nz_networks[i].mass
         id = nz_networks[i].id
 
+        
+
         for (j, val) in enumerate(model_names)
 
-            D = model_summary(network, id, val; abundance, mass)
+            D, N = model_summary(network, id, val; abundance, mass)
             if typeof(D) != Nothing
                 push!(topology, D)
+                push!(nz_networks_pred, N)
             end
 
         end

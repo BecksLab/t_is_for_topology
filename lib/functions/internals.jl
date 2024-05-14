@@ -53,7 +53,8 @@ end
 """
 model_summary(N::SpeciesInteractionNetwork{<:Partiteness, <:Binary})
 
-    returns the 'summary statistics' for a network
+    returns the 'summary statistics' for a network (D) as well as the
+    predicted network (N).
 """
 function model_summary(
     network::SpeciesInteractionNetwork{<:Partiteness,<:Binary},
@@ -121,8 +122,13 @@ function model_summary(
         D[:S2_mod] = d[:S2]
         D[:S4_mod] = d[:S4]
         D[:S5_mod] = d[:S5]
+
+        N_d = Dict{Symbol,Any}()
+        N_d[:id] = network_id
+        N_d[:network] = N
     else
         D = nothing
+        N_d = nothing
     end
-    return D
+    return D, N_d
 end
