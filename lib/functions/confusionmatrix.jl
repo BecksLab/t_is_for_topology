@@ -36,6 +36,7 @@ end
 
 function benchmark(obs, pred; levels = 500)
     thresholds = LinRange(minimum(pred), maximum(pred), levels)
+    obs = Bool.(obs) # make Bool
     M = Vector{ConfusionMatrix}(undef, length(thresholds))
     for (i, τ) in enumerate(thresholds)
         binpred = pred .>= τ
@@ -46,7 +47,8 @@ function benchmark(obs, pred; levels = 500)
         M[i] = ConfusionMatrix(tp, tn, fp, fn)
     end
     AUPRC = ∫(tpr.(M), ppv.(M))
-    𝑚𝑐𝑐 = findmax(mcc.(M))[1]
+    _mcc = mcc.(M)
+    𝑚𝑐𝑐 = findmax(_mcc[.!isnan.(_mcc)])[1] # need to avoid NaN bias
     τ = thresholds[last(findmax(informedness.(M)))]
     return AUPRC, 𝑚𝑐𝑐, τ
 end
