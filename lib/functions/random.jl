@@ -6,7 +6,7 @@ include("internals.jl")
 randommodel(S::Int64, L::Int64)
 
     Return a network of randomly assembled interactions according to
-    the cascade model.
+    the Erdős-Rényi model.
 
     This is essentially a wrapper for the `erdos_renyi` function from
     Graphs.jl and just packes it into a SpeciesInteraction network
