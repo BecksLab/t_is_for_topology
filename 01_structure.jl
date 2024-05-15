@@ -38,6 +38,11 @@ topology = DataFrame(
     S5_mod = Float64[],
 );
 
+# create df to store predicted networks - we will need these later
+networks_pred = DataFrame(
+    id = Any[],
+    network = Any[]);
+
 ## Mangal networks
 
 model_names = ["random", "niche", "cascade", "maxent"]
@@ -53,8 +58,9 @@ n_reps = 40 #number of reps for each model for each network
 
         for (j, val) in enumerate(model_names)
 
-            D = model_summary(network, id, val; abundance, mass)
+            D, N = model_summary(network, id, val; abundance, mass)
             push!(topology, D)
+            push!(networks_pred, N)
 
         end
     end
@@ -66,10 +72,6 @@ end
 nz_networks = load_object("data/raw/new_zealand/nz_networks.jlds")
 model_names = ["random", "niche", "cascade", "maxent", "neutral", "adbm"]
 
-# create df to store predicted networks - we will need these later
-nz_networks_pred = DataFrame(
-    id = Any[],
-    network = Any[]);
 
 @showprogress for _ = 1:n_reps
     for i in eachindex(nz_networks)
@@ -86,11 +88,14 @@ nz_networks_pred = DataFrame(
             D, N = model_summary(network, id, val; abundance, mass)
             if typeof(D) != Nothing
                 push!(topology, D)
-                push!(nz_networks_pred, N)
+                push!(networks_pred, N)
             end
 
         end
     end
 end
 
+# write summaries as .csv
 CSV.write("data/processed/topology_summary.csv", topology)
+# write networks as object
+save_object("data/processed/predicted_networks.jlds", networks_pred)
