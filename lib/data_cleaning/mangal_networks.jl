@@ -20,14 +20,19 @@ mangal_topology = DataFrame(
 );
 
 # make object to store each network so we can import it later
-networks = Any[]
+networks = DataFrame(
+    id = Any[],
+    network = Any[]);
 
 @showprogress for i in eachindex(mangal_networks)
     N = simplify(mangalnetwork(mangal_networks[i].id))
 
     if richness(N) <= 200 # remove large networks because they make things slow
 
-        push!(networks, N) # push network 'as is'
+        N_d = Dict{Symbol,Any}()
+        N_d[:id] = mangal_networks[i].id
+        N_d[:network] = N
+        push!(networks, N_d) # push network 'as is'
 
         N = render(Binary, N) # make binary
 
