@@ -27,3 +27,6 @@ for i in eachindex(nz_networks)
     push!(observed_networks, N_d)
     
 end
+
+# filter out the structural models
+
