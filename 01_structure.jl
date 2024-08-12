@@ -49,9 +49,10 @@ model_names = ["random", "niche", "cascade", "maxent"]
 n_reps = 40 #number of reps for each model for each network
 
 @showprogress for _ = 1:n_reps
-    for i in eachindex(mangal_networks)
+    for i in 1:nrow(mangal_networks)
 
-        network = render(Binary, mangal_networks[i])
+        N = simplify(mangalnetwork(mangal_foodwebs.id[i]))
+        network = render(Binary, N)
         abundance = [0.0, 0.0] #dummy variable
         mass = [0.0, 0.0] #dummy variable
         id = mangal_summary.id[i]
