@@ -20,7 +20,6 @@ include("lib/functions/random.jl")
 
 # import mangal networks
 mangal_networks = load_object("data/raw/mangal/mangal_networks.jlds")
-mangal_summary = CSV.read("data/processed/mangal_summary.csv", DataFrame)
 
 # create df for the outputs to be stored
 
@@ -51,11 +50,11 @@ n_reps = 40 #number of reps for each model for each network
 @showprogress for _ = 1:n_reps
     for i in 1:nrow(mangal_networks)
 
-        N = simplify(mangalnetwork(mangal_foodwebs.id[i]))
+        N = mangal_networks.network[i]
         network = render(Binary, N)
         abundance = [0.0, 0.0] #dummy variable
         mass = [0.0, 0.0] #dummy variable
-        id = mangal_summary.id[i]
+        id = mangal_networks.id[i]
 
         for (j, val) in enumerate(model_names)
 
