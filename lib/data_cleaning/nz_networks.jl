@@ -36,7 +36,7 @@ abundance_data_NZ(fw_name::String)
   Their Structure with Minimal Biases.” PLOS Computational Biology 19 (9): 
   e1011458. https://doi.org/10.1371/journal.pcbi.1011458. 
 """
-function abundance_data_NZ(fw_name::String)
+function abundance_data_NZ(fw_name::String15)
 
     # filter abundance data for this food web and get species names
     abund_fw = abund_NZ[abund_NZ[!, :food_web].==fw_name, :]
